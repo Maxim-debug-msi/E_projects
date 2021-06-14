@@ -1,0 +1,19 @@
+int const arrSize = 6;
+
+int main() {
+    int arr[arrSize] {-100,-50, -5, 1, 10, 15};
+    int tmp;
+    for(int i = 0; i < arrSize - 1; i++){//sorting an array modulo 
+        for(int j = 0; j < arrSize - i - 1; j++){
+            if(abs(arr[j]) > abs(arr[j + 1])){
+                tmp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = tmp;
+            }
+        }
+    }
+    for(int i = 0; i < arrSize; i++){//output array
+        std::cout<<arr[i]<<" ";
+    }
+    return 0;
+}
