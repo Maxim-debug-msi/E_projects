@@ -1,0 +1,20 @@
+#include <iostream>
+int const arrSize = 6;
+
+int main() {
+    int arr[arrSize] {2, 7, 11, 15, 20, 4};
+    int need = 24;
+    bool flag = false;
+    for(int i = 0; i < arrSize && !flag; i++){
+        for(int j = i + 1; j < arrSize && !flag; j++){
+            if(arr[i] < need && arr[j] < need){
+                if(arr[i] + arr[j] == need){
+                    flag = true;
+                    std::cout<<"Numbers: "<<arr[i]<<" "<<arr[j]<<std::endl;
+                }
+            }
+        }
+
+    }
+    return 0;
+}
