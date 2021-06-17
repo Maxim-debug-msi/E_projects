@@ -3,17 +3,18 @@ int const arrSize = 9;
 
 int main(){
     int arr[arrSize] {-2,1,-3,4,-1,2,1,-5,4};
-    int x = 0, y = 0, adder_past = arr[0];
+    int x = 0, y = 0;
+    int sum = 0, maxSum = 0;
     for(int i = 0; i < arrSize; i++){
-        int adder = 0;
-        for(int j = i; j < arrSize; j++){
-            adder+=arr[j];
-            if(adder > adder_past) {
-                x = i;
-                y = j;
-                adder_past = adder;
-            }
+        sum += arr[i];
+        if(sum > maxSum){
+            maxSum = sum;
+            y = i;
+        }
+        if(sum < 0){
+            sum = 0;
+            x = i + 1;
         }
     }
-    std::cout<<"Largest sum between items under an index: "<<x<<" "<<y<<" - "<<adder_past<<std::endl;
+    std::cout<<"Largest sum between items under an index: "<<x<<" "<<y<<" - "<<maxSum<<std::endl;
 }
