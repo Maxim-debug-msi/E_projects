@@ -1,19 +1,29 @@
+#include <iostream>
+
 int const arrSize = 6;
 
 int main() {
     int arr[arrSize] {-100,-50, -5, 1, 10, 15};
-    int tmp;
-    for(int i = 0; i < arrSize - 1; i++){//sorting an array modulo 
-        for(int j = 0; j < arrSize - i - 1; j++){
-            if(abs(arr[j]) > abs(arr[j + 1])){
-                tmp = arr[j];
-                arr[j] = arr[j + 1];
-                arr[j + 1] = tmp;
-            }
+    int tmp, i = 1, j = 1;
+    bool flag = true;
+    for(int i = 0; i < arrSize && flag; i++){
+        if(arr[i] >= 0){
+            tmp = i;
+            flag = false;
         }
     }
-    for(int i = 0; i < arrSize; i++){//output array
-        std::cout<<arr[i]<<" ";
+    std::cout<<arr[tmp]<<" ";
+    while(j < arrSize - tmp || tmp - i >= 0){
+        if(abs(arr[tmp - i]) > abs(arr[tmp + j]) && i >= 0 && j < arrSize - tmp) {
+            std::cout<<arr[tmp + j]<<" ";
+            std::cout<<arr[tmp - i]<<" ";
+        }else if(abs(arr[tmp - i]) < abs(arr[tmp + j]) && i >= 0 && j < arrSize - tmp){
+            std::cout<<arr[tmp - i]<<" ";
+            std::cout<<arr[tmp + j]<<" ";
+        }else if(i >= 0) std::cout<<arr[tmp - i]<<" ";
+        else std::cout<<arr[tmp + j]<<" ";
+        ++i;
+        ++j;
     }
     return 0;
 }
