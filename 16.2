@@ -1,0 +1,19 @@
+#include <iostream>
+#include <string>
+#include <iomanip>
+
+int main() {
+    int mantis, exponent, long_exp;
+    double result;
+    std::string exp;
+    std::cout<<"Enter the mantis:"<<std::endl;
+    std::cin>>mantis;
+    std::cout<<"Enter the exponent:"<<std::endl;
+    std::cin>>exponent;
+    exp = "." + std::to_string(exponent);
+    long_exp = exp.length() - 1;
+    result = mantis + std::stod(exp);
+    std::cout<<std::fixed<<std::setprecision(long_exp)<<"Result "<<result<<std::endl;
+
+    return 0;
+}
