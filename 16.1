@@ -1,0 +1,23 @@
+#include <iostream>
+#include <sstream>
+int main() {
+    float speed = .0f;
+    float delta;
+    std::stringstream result;
+    result << speed << "km/h ";
+    do{
+        std::cout<<"Current speed: "<<speed<<" km/h"<<std::endl;
+        std::cout<<"Indicate the difference in speed"<<std::endl;
+        do {
+            std::cin >> delta;
+            if(speed + delta > 150) std::cout<<"Speed to high! Again."<<std::endl;
+            else speed += delta;
+        }while(speed > 150);
+        if(speed >= 0)result << speed << "km/h ";
+
+
+    }while(speed > 0);
+    std::cout<<result.str()<<std::endl;
+    result.clear();
+    return 0;
+}
