@@ -1,0 +1,58 @@
+#include <iostream>
+#include <string>
+#include <sstream>
+
+char exp_type;
+
+bool right_write(std::string text){
+    int dot = 0, exp_pos = 0;
+    for(int i = 0; i < text.size(); i++){
+        if(text[i] == '.')
+        {
+            dot++;
+        }
+        if(text[i] > '9' || text[i] < '0'
+            && text[i] != '.' && text[i] != '+' && text[i] != '-' && text[i] != '*' && text[i] != '/')
+        {
+            return false;
+        }
+        if(text[i] == '+' || text[i] == '-' || text[i] == '*' || text[i] == '/')
+        {
+            exp_pos = i;
+            dot = 0;
+        }
+        if((text[i] == '+' || text[i] == '-' || text[i] == '*' || text[i] == '/') && dot > 1)
+        {
+            return false;
+        }
+        if(i > exp_pos && dot > 1)
+        {
+            return false;
+        }
+    }
+    exp_type = text[exp_pos];
+    return true;
+}
+
+int main() {
+    std::string operation, a_str, b_str;
+    double a, b, result;
+    bool right_exp;
+
+    do {//checking correct input
+        std::cout << "Enter expression:" << std::endl;
+        std::cin >> operation;
+        right_exp = right_write(operation);
+        if(!right_exp) std::cout<<"Invalid enter! Try again."<<std::endl;
+    }while(!right_exp);
+
+    std::stringstream exp(operation);
+    std::getline(exp, a_str, exp_type);
+    std::getline(exp, b_str);
+    a = std::stod(a_str);
+    b = std::stod(b_str);
+
+    result = (exp_type == '+') ? a + b : (exp_type == '-') ? a - b : (exp_type == '*') ? a * b : a / b;
+    std::cout<<"Result expression: "<<result<<std::endl;
+    std::cin.clear();
+    return 0;
