@@ -1,0 +1,102 @@
+#include <iostream>
+#include <sstream>
+#include <string>
+
+int state = 0;
+
+enum automatic
+{
+    POWER_IN_HOME = 1 << 0,
+    MAIN_OUTLETS = 1 << 1,
+    LIGHT_HOME = 1 << 2,
+    LIGHT_GARDEN = 1 << 3,
+    OVEN = 1 << 4,
+    BOILER = 1 << 5,
+    CONDITIONER = 1 << 6
+};
+
+void water_heating(float t_out)
+{
+    if(t_out > 5) state &= ~BOILER;
+    else if(t_out < 0) state |= BOILER;
+    if(state & BOILER) std::cout<<"Boiler is on."<<std::endl;
+    else if(!(state & BOILER)) std::cout<<"Boiler is off."<<std::endl;
+}
+
+void light_in_garden(int time, const std::string move)
+{
+    if(time >= 16 || time <= 5 && move == "yes") state |= LIGHT_GARDEN;
+    else state &= ~LIGHT_GARDEN;
+    if(state & LIGHT_GARDEN) std::cout<<"Light in the garden is on."<<std::endl;
+    else if(!(state & LIGHT_GARDEN)) std::cout<<"Light in the garden is off."<<std::endl;
+}
+
+void heating_indoor(float t_in)//heating on-off
+{
+    if(t_in < 22) state |= OVEN;
+    else if(t_in >= 25) state &= ~OVEN;
+    if(state & OVEN) std::cout<<"Heating is on."<<std::endl;
+    else if(!(state & OVEN)) std::cout<<"Heating is off."<<std::endl;
+}
+
+void conditioner(float t_in)//conditioner on-off
+{
+    if(t_in >= 30) state |= CONDITIONER;
+    else if(t_in <= 25) state &= ~CONDITIONER;
+    if(state & CONDITIONER) std::cout<<"Conditioner is on."<<std::endl;
+    else if(!(state & CONDITIONER)) std::cout<<"Conditioner is off."<<std::endl;
+}
+
+void light_in_home(const std::string light, int hour)// temperature of indoor light
+{
+    if(light == "on") state |= LIGHT_HOME;
+    else state &= ~LIGHT_HOME;
+    if(state & LIGHT_HOME)
+    {
+        std::cout<<"Indoor light is on."<<std::endl;
+        if(hour >= 16 && hour <= 20)
+        {
+            std::cout<<"Temperature of light: "<<5000 - (hour - 16) * 575<<"K"<<std::endl;
+        }
+        else
+        {
+            if(hour > 20)std::cout<<"Temperature of light is 2700K."<<std::endl;
+        }
+    }
+    else
+    {
+        std::cout<<"Indoor light is off."<<std::endl;
+    }
+}
+
+int main() {
+    float t_out, t_in;
+    int days = 1;
+    std::string out_move, light_indoor, current_condition;
+    std::stringstream condition;
+    for(int hour = 0; days < 3; hour++)
+    {
+
+        std::cout<<"Enter temperature outside home(digit), temperature inside(digit), movement outside(yes/no)"
+                   "and on or off light indoor(on/off)."<<std::endl;
+        std::getline(std::cin, current_condition);
+        condition << current_condition;//stream writing
+        condition >> t_out >> t_in >> out_move >> light_indoor;//unloading variables
+
+        water_heating(t_out);
+        light_in_garden(hour, out_move);
+        heating_indoor(t_in);
+        conditioner(t_in);
+        light_in_home(light_indoor, hour);
+
+        if(hour == 23)
+        {
+            hour = -1;
+            days++;
+        }
+        std::cout<<"Day "<<days<<" "<<"Hour "<<hour<<":00"<<std::endl;
+        condition.clear(); //clear string stream to next iteration
+    }
+
+    return 0;
+}
