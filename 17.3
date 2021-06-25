@@ -1,0 +1,33 @@
+#include <iostream>
+
+bool substr(const char* x, const char* y)
+{
+    bool flag = true;
+    for(int i = 0; i < strlen(x); i++)
+    {
+        if(*(x + i) == y[0] && strlen(y) <= strlen(x) - i + 1)
+        {
+            for(int j = i + 1; j < strlen(y) && flag; j++)
+            {
+                if(*(y + j) != *(x + j)) flag = false;
+            }
+            if(flag) return true;
+            else flag = true;
+        }
+    }
+    return false;
+}
+
+const char* b_to_s(bool x)
+{
+    if(x) return "true";
+    else return "false";
+}
+
+int main() {
+    const char* a = "Helicopter";
+    const char* b = "lic";
+    const char* c = "azaza";
+    std::cout<<b_to_s(substr(a, b))<<" "<<b_to_s(substr(a, c))<<std::endl;
+    return 0;
+}
