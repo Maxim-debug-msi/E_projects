@@ -1,0 +1,16 @@
+#include <iostream>
+
+void swap(int* a, int* b)
+{
+int* ptr_c;
+ptr_c = a;
+a = b;
+b = ptr_c;
+std::cout<<*a<<" "<<*b<<std::endl;
+}
+
+int main() {
+    int a = 15, b = 20;
+    swap(&a, &b);
+    return 0;
+}
