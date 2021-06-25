@@ -1,0 +1,35 @@
+#include <iostream>
+
+const int arrSize = 10;
+
+int* reverse(const int x[], int y[])
+{
+    int i = arrSize - 1;
+    int j = 0;
+    while(i >= 0)
+    {
+        *(y + j++) = *(x + i--);
+    }
+    return y;
+}
+
+void output(const int arr[])
+{
+    int i = 0;
+    while(i < arrSize)
+    {
+        std::cout<<*(arr + i++)<<" ";
+    }
+    std::cout<<std::endl;
+}
+
+int main() {
+    int x[arrSize] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+    int y[arrSize];
+    std::cout<<x<<": ";
+    output(x);
+    reverse(x, y);
+    std::cout<<y<<": ";
+    output(y);
+    return 0;
+}
