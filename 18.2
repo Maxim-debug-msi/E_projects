@@ -1,0 +1,21 @@
+#include <iostream>
+
+int ways(int n)
+{
+    if(n == 0) return 1;
+    int score = 0;
+    for(int i = 1; i <= n; i++)
+    {
+       score += ways(n - i);
+    }
+    return score;
+}
+
+int main() {
+    int n;
+    std::cout<<"Which step should the rabbit jump?"<<std::endl;
+    std::cin>>n;
+    std::cout<<ways(n)<<std::endl;
+
+    return 0;
+}
