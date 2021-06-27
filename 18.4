@@ -1,0 +1,17 @@
+#include <iostream>
+void even_digit(long long  int& n, int& ans)
+{
+   long long int digit = n%10;
+    if(digit % 2 == 0) ans++;
+    n /= 10;
+    if(n > 0) even_digit(n, ans);
+}
+int main() {
+    long long int n;
+    int ans = 0;
+    std::cout<<"Enter the number:"<<std::endl;
+    std::cin>>n;
+    even_digit(n, ans);
+    std::cout<<ans<<std::endl;
+    return 0;
+}
