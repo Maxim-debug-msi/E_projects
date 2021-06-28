@@ -1,0 +1,92 @@
+#include <iostream>
+#include <fstream>
+
+void top_valid(int& top, const int* iterator, int* past_q)
+{
+    for(int i = 0; i <= *iterator; i++)
+    {
+        if(top > 13) top = 1;
+        if(*(past_q + i) == top)
+        {
+            top++;
+            i = -1;
+        }
+    }
+    *(past_q + *iterator) = top;
+}
+
+int main() {
+    int past_q[13]; //write past question
+    int shift, players = 0, viewers = 0, top = 1;
+    std::string answer, question, r_answer;
+    std::ifstream(Questions);
+    std::ifstream(Answers);
+    Questions.open("C:\\E_files\\Questions.txt", std::ios::binary);
+    Answers.open("C:\\E_files\\Answers.txt", std::ios::binary);
+    for(int i = 0; i < 13 && players < 6 && viewers < 6; i++)
+    {
+        std::cout<<"Spin the top:"<<std::endl;
+        std::cin>>shift;
+        top += shift;
+        top_valid(top, &i, past_q);
+        std::cout<<top<<std::endl;
+        for(int j = 0; j < top; j++)
+        {
+            Questions >> question;
+        }
+        Questions.seekg(0);
+        for(int k = 0; k < top; k++)
+        {
+            Answers >> r_answer;
+        }
+        Answers.seekg(0);
+        std::cout<<"Question "<<top<<": "<<question<<std::endl;
+        std::cout<<"Your answer:";
+        std::cin >> answer;
+        if(r_answer == answer)
+        {
+            std::cout<<"Right answer!"<<std::endl;
+            players++;
+        }
+        else
+        {
+            std::cout<<"Wrong answer."<<std::endl;
+            viewers++;
+        }
+    }
+    if(players > viewers) std::cout<<"Players won!"<<std::endl;
+    else std::cout<<"Viewers won!"<<std::endl;
+    return 0;
+}
+//QUESTIONS
+/*
+What_is_the_most_populous_country_in_the_world?
+What_is_the_root_of_255?
+What_year_was_the_first_iPhone_released?
+What_is_the_smallest_planet_in_the_solar_system?
+Where_did_the_Olympic_Games_originate?
+In_what_year_did_the_First_World_War_begin?
+Where_is_the_tallest_building_in_the_world?
+How_many_teeth_should_an_adult_have?
+The_second_largest_country_in_the_world?
+Where_do_the_Aztecs_come_from?
+What_is_the_largest_human_organ?
+Who_is_more_resilient_and_can_do_without_water_longer:_a_giraffe_or_a_camel?
+What_are_the_most_active_muscles_in_a_person?
+*/
+//ANSWERS
+/*
+China
+15
+2007
+Mercury
+Greece
+1914
+Dubai
+32
+Canada
+Mexico
+Skin
+Giraffe
+Ophthalmic
+*/
