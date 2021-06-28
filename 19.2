@@ -1,0 +1,20 @@
+#include <iostream>
+#include <fstream>
+
+int main() {
+    char buf[21];
+    std::string text_out;
+    std::ifstream(text);
+    text.open("C:\\E_files\\text.txt", std::ios::binary);
+    if(text.is_open())
+    {
+    while(!text.eof())
+    {
+        text.read((char*)buf, 20);
+        buf[text.gcount()] = 0;
+        std::cout<<buf;
+    }
+    text.close();
+    }
+    else std::cout<<"File read error!"<<std::endl;
+    return 0;
