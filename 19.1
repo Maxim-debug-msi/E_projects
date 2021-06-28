@@ -1,0 +1,20 @@
+#include <iostream>
+#include <fstream>
+
+int main() {
+    int count = 0;
+    std::string word;
+    std::string s_word;
+    std::cout<<"Enter your search word:"<<std::endl;
+    std::cin >> s_word;
+    std::ifstream(words);
+    words.open("C:\\E_files\\words.txt");
+    while(!words.eof())
+    {
+        words >> word;
+        if(word == s_word) count++;
+    }
+    words.close();
+    std::cout<<"Coincidence: "<<count<<std::endl;
+    return 0;
+}
