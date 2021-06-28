@@ -1,0 +1,26 @@
+#include <iostream>
+#include <fstream>
+
+int main() {
+    char png[3];
+    int digit;
+    char ch_1;
+    std::string path;
+    std::cout << "Specify the path to the file: ";
+    std::cin >> path;
+    std::ifstream(imagine);
+    imagine.open(path, std::ios::binary);
+    if(imagine.is_open()) {
+        imagine >> ch_1;
+        imagine.read((char *) png, 3);
+        digit = ch_1 - '0';
+        if (path.substr(path.size() - 3) == "png" && digit == -167 && png[0] == 'P' && png[1] == 'N' && png[2] == 'G') {
+            std::cout << "This is a file with the extension PNG." << std::endl;
+        } else {
+            std::cout << "This is a file with no extension PNG." << std::endl;
+        }
+        imagine.close();
+    }
+    else std::cout<<"Error read!"<<std::endl;
+    return 0;
+}
