@@ -1,0 +1,40 @@
+#include <iostream>
+#include <fstream>
+
+int main() {
+    int salary, max_salary = 0;
+    std::string date;
+    std::string name_x, name_y;
+
+    std::ifstream(bill);
+    bill.open("C:\\E_files\\bill.txt", std::ios::binary);
+    while(!bill.eof())
+    {
+        bill >> name_x >> salary >> date;
+        if(salary > max_salary)
+        {
+            max_salary = salary;
+            name_y = name_x;
+        }
+        else if(name_x == name_y)
+        {
+            max_salary += salary;
+        }
+    }
+    std::cout<<name_y <<" "<<max_salary<<std::endl;
+    bill.close();
+    return 0;
+}
+//FILE
+/*
+Tom_Hanks 35500 10.11.2020
+Rebecca_Williams 85000 1.1.2021
+Sally_Field 15600 15.8.2021
+Michael_Humphreys 29400 23.5.2020
+Harold_Herthum 74300 9.6.2019
+George_Kelly 45000 12.3.2018
+Bob_Penny 12500 13.5.2020
+John_Randall 23400 2.10.2020
+Rebecca_Williams 6500 15.7.2020
+Margo_Moorer 12350 24.2.2019
+*/
