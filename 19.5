@@ -33,12 +33,9 @@ int main() {
         for(int j = 0; j < top; j++)
         {
             Questions >> question;
-        }
-        Questions.seekg(0);
-        for(int k = 0; k < top; k++)
-        {
             Answers >> r_answer;
         }
+        Questions.seekg(0);
         Answers.seekg(0);
         std::cout<<"Question "<<top<<": "<<question<<std::endl;
         std::cout<<"Your answer:";
