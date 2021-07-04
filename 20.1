@@ -1,0 +1,37 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+
+int main() {
+    std::string date;
+    std::string name;
+    int payment;
+    char c;
+    bool flag_1, flag_2;
+    std::ofstream new_bill("C:\\E_files\\new_bill.txt", std::ios::app);
+    do {
+        do { //check
+            std::cout << "Include name(use _ to 'space'), payment and date(DD:MM:YY):" << std::endl;
+            std::cin >> name;
+            std::cin >> payment;
+            std::cin >> date;
+            int dd = std::stoi(date.substr(0, 2));
+            int mm = std::stoi(date.substr(3, 2));
+            int yy = std::stoi(date.substr(6, 2));
+            if (dd > 31 || dd < 1 || mm > 12 || mm < 1 || yy < 0 || payment < 0) {
+                flag_1 = false;
+                std::cout << "Invalid data! Try again." << std::endl;
+            } else {
+                flag_1 = true;
+            }
+        } while (!flag_1);
+
+        new_bill << name << " " << payment << " " << date << std::endl;
+
+        std::cout<<"Continue(y/n):";
+        std::cin>>c;
+       flag_2 = (c == 'y');
+    }while(flag_2);
+    new_bill.close();
+    return 0;
+}
