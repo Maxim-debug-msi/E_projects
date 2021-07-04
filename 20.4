@@ -2,6 +2,8 @@
 #include <fstream>
 #include <ctime>
 #include <cstdlib>
+#include <iterator>
+#include <algorithm>
 
 void filling_ATM(int *arr, const int SIZE)
 {
@@ -32,43 +34,38 @@ void cash_withdrawal(int *arr, const int SIZE, int &amount)
 
 int main() {
     srand(time(nullptr));
+
     const int SIZE = 1000;
     int banknotes[SIZE] = {0};
-    int amount;
+    int amount, i = 0;
     char c;
 
-    std::ifstream ATM("C:\\E_files\\ATM.bin", std::ios::binary);
-    for(int i = 0; i < SIZE; i++)
-    {
-        ATM >> *(banknotes + i);
-    }
+    std::ifstream ATM("C:\\E_files\\ATM.bin", std::ios::binary | std::ios::app);
+    while(!ATM.eof()) ATM >> *(banknotes + i++);
     ATM.close();
 
     std::cout<<"Enter the operation(+ or -)"<<std::endl;
     std::cin >> c;
     if(c == '+')
     {
-        std::ofstream ATM("C:\\E_files\\ATM.bin", std::ios::binary);
         filling_ATM(banknotes, SIZE);
-        for(int i = 0; i < SIZE; i++)
-        {
-            ATM << *(banknotes + i) << std::endl;
-        }
+
+        std::ofstream ATM("C:\\E_files\\ATM.bin", std::ios::binary);
+        std::copy(banknotes, banknotes + SIZE, std::ostream_iterator<int>(ATM, "\n"));
         ATM.close();
     }
     else
     {
-        std::ofstream  ATM("C:\\E_files\\ATM.bin", std::ios::binary);
         do {
             std::cout << "Enter the withdrawal amount(multiple of 100):" << std::endl;
             std::cin >> amount;
             if(amount%100 != 0) std::cout<<"Incorrect amount! Try again."<<std::endl;
         }while(amount%100 != 0);
+
         cash_withdrawal(banknotes, SIZE, amount);
-        for(int i = 0; i < SIZE; i++)
-        {
-            ATM << *(banknotes + i) << std::endl;
-        }
+
+        std::ofstream ATM("C:\\E_files\\ATM.bin", std::ios::binary);
+        std::copy(banknotes, banknotes + SIZE, std::ostream_iterator<int>(ATM, "\n"));
         ATM.close();
     }
     return 0;
