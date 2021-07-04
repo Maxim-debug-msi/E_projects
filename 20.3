@@ -1,0 +1,25 @@
+#include <iostream>
+#include <fstream>
+
+int main() {
+    std::string fish;
+    std::string caught_fish;
+    char flag;
+    std::ifstream river("C:\\E_files\\river.txt");
+    std::ofstream basket("C:\\E_files\\basket.txt", std::ios::app);
+    do {
+        std::cout << "What kind of fish do you catch?" << std::endl;
+        std::cin >> fish;
+        while (!river.eof()) {
+            river >> caught_fish;
+            if (fish == caught_fish) basket << fish << std::endl;
+        }
+        std::cout << "Check your basket!" << std::endl;
+        std::cout <<"Do you want to continue?(y/n)"<<std::endl;
+        std::cin >> flag;
+        river.seekg(0);
+    }while(flag == 'y');
+    basket.close();
+    river.close();
+    return 0;
+}
