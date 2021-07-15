@@ -1,0 +1,91 @@
+#include <fstream>
+#include <string>
+#include <iostream>
+
+struct bill
+{
+    std::string name;
+    std::string date;
+    int salary = 0;
+};
+
+int main() {
+    bill person;
+    std::string command;
+    char request;
+
+    do {
+
+        std::cout << "Enter the command(list or add):" << std::endl;
+        std::cin >> command;
+
+        if (command == "list") {
+            std::ifstream(out);
+            out.open("C:\\E_files\\bill.bin", std::ios::binary);
+
+            if (out.is_open()) {
+                while (!out.eof()){
+                    unsigned int len_name = 0;
+                    unsigned int len_date = 0;
+
+                    out.read((char*)&len_name, sizeof(len_name));
+                    person.name.resize(len_name);
+                    out.read((char*)person.name.c_str(), len_name);
+
+                    if(person.name.empty())
+                    {
+                        break;
+                    }
+
+                    out.read((char*)&len_date, sizeof(len_date));
+                    person.date.resize(len_date);
+                    out.read((char*)person.date.c_str(), len_date);
+
+                    out.read((char*)&person.salary, sizeof(person.salary));
+
+                    std::cout << person.name << " " << person.date << " " << person.salary << std::endl;
+
+                }
+                out.close();
+            } else {
+                std::cerr << "File don't open to read!" << std::endl;
+                return 1;
+            }
+
+        } else if (command == "add") {
+            std::cout << "Enter the name:" << std::endl;
+            std::cin >> person.name;
+            std::cout << "Enter the date:" << std::endl;
+            std::cin >> person.date;
+            std::cout << "Enter the salary:" << std::endl;
+            std::cin >> person.salary;
+
+            std::ofstream (in);
+            in.open("C:\\E_files\\bill.bin", std::ios::binary | std::ios::app);
+
+            if(in.is_open())
+            {
+                unsigned int len_name = person.name.length();
+                unsigned int len_date = person.date.length();
+
+                in.write((char*)&len_name, sizeof(len_name));
+                in.write(person.name.c_str(), len_name);
+
+                in.write((char*)&len_date, sizeof(len_date));
+                in.write(person.date.c_str(), len_date);
+
+                in.write((char*)&person.salary, sizeof(person.salary));
+
+                in.close();
+            }
+            else
+            {
+                std::cerr << "File don't open to write!"<<std::endl;
+                return 2;
+            }
+        }
+        std::cout<<"Do you want to continue?(y/n)"<<std::endl;
+        std::cin >> request;
+    }while(request == 'y');
+    return 0;
+}
