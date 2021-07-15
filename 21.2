@@ -1,0 +1,119 @@
+#include <iostream>
+#include <string>
+
+struct rooms
+{
+    std::string room_on_stage = "-";
+    int area_room = 0;
+};
+
+struct stages
+{
+    rooms room[4];
+    int ceiling_height = 0;
+};
+
+struct buildings
+{
+    std::string building = "-";
+    std::string oven_home;
+    std::string oven_bath;
+    int area = 0;
+};
+
+struct plots
+{
+    buildings building[4];
+    stages stage[3];
+};
+
+
+int main() {
+    int sites;
+
+    std::cout << "Enter the number of sites:" << std::endl;
+    std::cin >> sites;
+
+    plots plot[100];
+
+
+    for(int i = 0; i < sites; i++)
+    {
+        std::cout<<"Plot "<< i + 1 << ": "<<std::endl;
+
+        std::cout<<"How many buildings are on the site?(1 to 4)"<<std::endl;
+        int b_count = 1;
+        std::cin >> b_count;
+
+        for(int j = 0; j < b_count; j++)
+        {
+            std::cout<<"Enter building on the site and its area:"<<std::endl;
+            std::cin >> plot[i].building[j].building >> plot[i].building[j].area;
+
+            if(plot[i].building[j].building == "Home")
+            {
+                std::cout<<"Is there a stove in the house?"<<std::endl;
+                std::cin>>plot[i].building[j].oven_home;
+            }
+            else if(plot[i].building[j].building == "Bath")
+            {
+                std::cout<<"Is there a stove in the bath?"<<std::endl;
+                std::cin>>plot[i].building[j].oven_bath;
+            }
+        }
+
+        std::cout<<"How many floors does the house have?(1 to 3)"<<std::endl;
+        int f_count = 1;
+        std::cin >> f_count;
+        for(int k = 0; k < f_count; k++)
+        {
+            std::cout<<"How many rooms are one the floor?(2 to 4)"<<std::endl;
+            int r_count = 2;
+            std::cin >> r_count;
+
+            std::cout<<"Enter the ceiling height of this floor:"<<std::endl;
+            std::cin >> plot[i].stage[k].ceiling_height;
+
+            for(int g = 0; g < r_count; g++)
+            {
+                std::cout<<"Enter the name of the room and its area:"<<std::endl;
+                std::cin >> plot[i].stage[k].room[g].room_on_stage >> plot[i].stage[k].room[g].area_room;
+            }
+        }
+
+    }
+
+    for(int i = 0; i < sites; i++)
+    {
+        std::cout<<"Plot "<<i+1<<": "<<std::endl;
+
+        for(int j = 0; j < 4; j++)
+        {
+            std::cout << plot[i].building[j].building << " " << plot[i].building[j].area << std::endl;
+
+            if(plot[i].building[j].building == "Home")
+            {
+                std::cout<<plot[i].building[j].oven_home<<std::endl;
+            }
+            else if(plot[i].building[j].building == "Bath")
+            {
+                std::cout<<plot[i].building[j].oven_bath<<std::endl;
+            }
+        }
+
+        std::cout<<"~~~~~~~~~~~~~~"<<std::endl;
+
+        for(int k = 0; k < 3; k++)
+        {
+            std::cout<<"Stage "<<k + 1<<": "<<std::endl;
+
+            for(int g = 0; g < 4; g++)
+            {
+                std::cout<<"Room: "<<plot[i].stage[k].room[g].room_on_stage<<" "<<plot[i].stage[k].room[g].area_room;
+                std::cout<<std::endl;
+            }
+            std::cout<<"~~~~~~~~~~~~"<<std::endl;
+        }
+    }
+    return 0;
+}
