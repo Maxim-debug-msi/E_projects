@@ -1,0 +1,93 @@
+#include <iostream>
+
+struct vec
+{
+    double x = 0;
+    double y = 0;
+};
+
+void add(vec &vector_a, vec &vector_b)
+{
+    vector_a.x = vector_a.x + vector_a.y;
+    vector_a.y = vector_b.x + vector_b.y;
+}
+
+void subtract(vec &vector_a, vec vector_b)
+{
+    vector_a.x = vector_a.x - vector_a.y;
+    vector_a.y = vector_b.x - vector_b.y;
+}
+
+void scale(vec &vector_a, float &s)
+{
+    vector_a.x *= s;
+    vector_a.y *= s;
+}
+
+double length(vec &vector_a)
+{
+    return sqrt(pow(vector_a.x, 2) + pow(vector_a.y, 2));
+}
+
+void norm(vec &vector_a)
+{
+    double l = length(vector_a);
+    vector_a.x /= l;
+    vector_a.y /= l;
+}
+
+int main() {
+    std::string command;
+    float s = 0;
+
+    std::cout << "Enter the operation(add, subtract, scale, length, normalize):" << std::endl;
+    std::cin  >> command;
+
+    vec vector_a;
+    vec vector_b;
+
+    std::cout << "Enter the coordinates of the first vector:" << std::endl;
+    std::cin >> vector_a.x >> vector_a.y;
+
+    if(command == "add" || command == "subtract")
+    {
+        std::cout << "Enter the coordinates of the second vector:" << std::endl;
+        std::cin >> vector_b.x >> vector_b.y;
+    }
+    else if(command == "scale")
+    {
+        std::cout<<"Enter scalar:"<<std::endl;
+        std::cin >> s;
+    }
+
+    if(command == "add")
+    {
+        add(vector_a, vector_b);
+        std::cout << "Result: " << vector_a.x << ";" << vector_a.y << std::endl;
+    }
+    else if(command == "subtract")
+    {
+        subtract(vector_a, vector_b);
+        std::cout << "Result: " << vector_a.x << ";" << vector_a.y << std::endl;
+    }
+    else if(command == "scale")
+    {
+        scale(vector_a, s);
+        std::cout << "Result: " << vector_a.x << ";" << vector_a.y << std::endl;
+    }
+    else if(command == "length")
+    {
+        std::cout<<"Result: " << length(vector_a) << std::endl;
+    }
+    else if(command == "normalize")
+    {
+        norm(vector_a);
+        std::cout << "Result: " << vector_a.x << ";" << vector_a.y << std::endl;
+    }
+    else
+    {
+        std::cout << "Unknown command." << std::endl;
+    }
+
+    return 0;
+}
