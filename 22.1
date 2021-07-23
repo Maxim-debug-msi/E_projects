@@ -1,0 +1,46 @@
+#include <iostream>
+#include <map>
+#include <string>
+
+int main() {
+    std::map<std::string, std::string> phone_book;
+    std::string p_num;
+    std::string surname;
+    char command;
+
+    std::cout << "Press '1' to add a subscriber to the phone book." << std::endl;
+    std::cout << "To find out the last name of the subscriber by phone number, press '2'." << std::endl;
+    std::cout << "To find out the phone number by the last name of the subscriber, press '3'." << std::endl;
+    std::cout << "Press any other key to exit." << std::endl;
+
+    do {
+        std::cout << "Enter command:" << std::endl;
+        std::cin >> command;
+
+        if (command == '1') {
+            std::cout << "Enter the phone number and surname of the subscriber:" << std::endl;
+            std::cin >> p_num >> surname;
+
+            phone_book.insert(std::pair<std::string, std::string>(p_num, surname));
+        } else if (command == '2') {
+            p_num.clear();
+            std::cout << "Enter the phone number:" << std::endl;
+            std::cin >> p_num;
+
+            std::cout << "Surname: " << phone_book[p_num] << std::endl;
+        } else if (command == '3') {
+            surname.clear();
+            std::cout << "Enter the surname:" << std::endl;
+            std::cin >> surname;
+
+
+            for (std::map<std::string, std::string>::iterator phone = phone_book.begin();
+                 phone != phone_book.end(); phone++) {
+                if (phone->second == surname) {
+                    std::cout << phone->first << std::endl;
+                }
+            }
+        }
+    }while(command == '1' || command == '2' || command == '3');
+    return 0;
+}
