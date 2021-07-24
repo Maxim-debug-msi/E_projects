@@ -3,10 +3,9 @@
 #include <map>
 
 int main() {
-    std::map<int, std::string> queue;
-    std::map<int, std::string>::iterator cursor;
+    std::map<std::string, int> queue;
+    std::map<std::string, int>::iterator cursor;
     std::string surname;
-    int key = 0;
 
     std::cout << "When the person arrives at the queue, "
                  "write down their last name. To call enter 'Next'. To exit enter 'exit'" << std::endl;
@@ -15,22 +14,25 @@ int main() {
         std::cin >> surname;
 
         if (surname == "Next") {
-            int i = queue.begin()->first;
-            char min_char = queue.begin()->second[0];
-            for(cursor = queue.begin(); cursor != queue.end(); cursor++)
+            if(queue.empty())
             {
-                if(min_char > cursor->second[0])
-                {
-                    min_char = cursor->second[0];
-                    i = cursor->first;
-                }
+                std::cout << "Error. Queue is empty!" << std::endl;
+                return 1;
             }
-            std::cout << "->" + queue[i] << std::endl;
-            cursor = queue.find(i);
-            queue.erase(cursor);
+           std::cout << "<-" << queue.begin()->first << std::endl;
+           queue.begin()->second--;
+           if(queue.begin()->second == 0)
+           {
+               queue.erase(queue.begin());
+           }
+           if(queue.empty())
+           {
+               std::cout << "Queue is empty. Next operation 'Next' is not possible." << std::endl;
+           }
         } else {
-            std::pair<int, std::string> person(key++, surname);
-            queue.insert(person);
+            queue.insert(std::pair<std::string, int>(surname, 0));
+            cursor = queue.find(surname);
+            cursor->second++;
         }
     }while(surname != "exit");
 
