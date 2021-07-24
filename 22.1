@@ -1,12 +1,15 @@
 #include <iostream>
 #include <map>
 #include <string>
+#include <vector>
 
 int main() {
-    std::map<std::string, std::string> phone_book;
+    std::map<std::string, std::string> number_to_surname;
+    std::map<std::string, std::vector<std::string>> surname_to_number;
     std::string p_num;
     std::string surname;
     char command;
+    int i = 0;
 
     std::cout << "Press '1' to add a subscriber to the phone book." << std::endl;
     std::cout << "To find out the last name of the subscriber by phone number, press '2'." << std::endl;
@@ -21,26 +24,26 @@ int main() {
             std::cout << "Enter the phone number and surname of the subscriber:" << std::endl;
             std::cin >> p_num >> surname;
 
-            phone_book.insert(std::pair<std::string, std::string>(p_num, surname));
+            number_to_surname.insert(std::pair<std::string, std::string>(p_num, surname));
+            surname_to_number[surname].push_back(p_num);
         } else if (command == '2') {
             p_num.clear();
             std::cout << "Enter the phone number:" << std::endl;
             std::cin >> p_num;
 
-            std::cout << "Surname: " << phone_book[p_num] << std::endl;
+            std::cout << "Surname: " << number_to_surname[p_num] << std::endl;
         } else if (command == '3') {
             surname.clear();
             std::cout << "Enter the surname:" << std::endl;
             std::cin >> surname;
 
-
-            for (std::map<std::string, std::string>::iterator phone = phone_book.begin();
-                 phone != phone_book.end(); phone++) {
-                if (phone->second == surname) {
-                    std::cout << phone->first << std::endl;
-                }
+            std::map<std::string, std::vector<std::string>>::iterator it = surname_to_number.find(surname);
+            for(int j = 0; j < it->second.size(); j++)
+            {
+                std::cout << it->second[j] << std::endl;
             }
         }
     }while(command == '1' || command == '2' || command == '3');
     return 0;
 }
+
