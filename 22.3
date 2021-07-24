@@ -2,37 +2,30 @@
 #include <string>
 #include <map>
 
-bool anagram(std::map<std::string, std::string>::iterator it)
+std::map<char, int>string_to_map(const std::string &str)
 {
-    if(it->first.length() == it->second.length())
+    std::map<char, int> myMap;
+    for(int i = 0; i < str.length(); i++)
     {
-        int sum_1 = 0;
-        int sum_2 = 0;
-        for(int i = 0; i < it->first.length(); i++)
-        {
-            sum_1 += (int)it->first[i];
-            sum_2 += (int)it->second[i];
-        }
-        if(sum_1 == sum_2)
-        {
-            return true;
-        }
+        myMap.insert(std::pair<char, int>(str[i], (int)str[i]));
     }
-    return false;
+    return myMap;
 }
 
 int main() {
-    std::map<std::string, std::string> words;
+    std::map<char, int> word_1;
+    std::map<char, int> word_2;
+
     std::string f_word;
     std::string s_word;
 
     std::cout << "Enter the first and second word to check for anagram:" << std::endl;
     std::cin >> f_word >> s_word;
 
-    words.insert(std::pair<std::string, std::string>(f_word, s_word));
-    std::map<std::string, std::string>::iterator  it = words.begin();
+    word_1 = string_to_map(f_word);
+    word_2 = string_to_map(s_word);
 
-    if(anagram(it))
+    if(word_1 == word_2)
     {
         std::cout << "It's anagram!" << std::endl;
     }
