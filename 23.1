@@ -1,0 +1,40 @@
+#include <iostream>
+
+#define DAY_F(n) DAY ## _ ## n
+#define DAY_S "DAY"
+#define DAY_1 "Monday"
+#define DAY_2 "Tuesday"
+#define DAY_3 "Wednesday"
+#define DAY_4 "Thursday"
+#define DAY_5 "Friday"
+#define DAY_6 "Saturday"
+#define DAY_7 "Sunday"
+
+//Choose realisation of program
+#if 1
+int main()
+{
+    std::string num_day;
+
+    std::cout << "Enter number day of week(1 to 7):" << std::endl;
+    std::cin >> num_day;
+
+    if(DAY_S + num_day == "DAY1") std::cout << DAY_1 << std::endl;
+    else if(DAY_S + num_day == "DAY2") std::cout << DAY_2 << std::endl;
+    else if(DAY_S + num_day == "DAY3") std::cout << DAY_3 << std::endl;
+    else if(DAY_S + num_day == "DAY4") std::cout << DAY_4 << std::endl;
+    else if(DAY_S + num_day == "DAY5") std::cout << DAY_5 << std::endl;
+    else if(DAY_S + num_day == "DAY6") std::cout << DAY_6 << std::endl;
+    else if(DAY_S + num_day == "DAY7") std::cout << DAY_7 << std::endl;
+   return 0;
+}
+#endif
+
+#if 0
+int main() {
+    //Insert number
+    std::cout << DAY_F(7) << std::endl;
+
+    return 0;
+}
+#endif
