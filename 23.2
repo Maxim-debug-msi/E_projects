@@ -1,0 +1,31 @@
+#include <iostream>
+
+#define LOOP_INPUT for(int i = 0; i < N; i++) {std::cin >> carriage[i]; pass_counter += carriage[i];}
+
+#define LOOP_CHECK(n) for(int i = 0; i < N; i++){if(n == 1 && carriage[i] > 20) \
+                                std::cout << "Carriage " << i + 1 << " is overcrowded!" << std::endl; \
+                            if(n == 0 && carriage[i] == 0)                      \
+                                std::cout << "Carriage " << i + 1 << " is empty!" << std::endl;}
+
+#define FUNC(LEFT, RIGHT) LEFT ## _ ## RIGHT
+
+void capacity_carriage(const int carriage[], const int N)
+{
+    LOOP_CHECK(1);
+    LOOP_CHECK(0);
+}
+
+int main() {
+    const int N = 20;
+    int carriage[N];
+    int pass_counter = 0;
+
+    std::cout << "Enter passenger count:" << std::endl;
+
+    LOOP_INPUT
+
+    FUNC(capacity, carriage)(carriage, N);
+
+    std::cout << "Count of passenger: " << pass_counter << std::endl;
+    return 0;
+}
