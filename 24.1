@@ -1,0 +1,58 @@
+#include <iostream>
+#include <ctime>
+#include <string>
+#include <iomanip>
+
+struct diary
+{
+    std::string task;
+    double time = 0;
+};
+
+int main() {
+    diary tasks[10];
+    std::string command;
+    std::string action;
+    bool act = false;
+    std::time_t t_begin;
+    std::time_t t_end;
+    int i = 0;
+
+    do {
+        std::cout << "Enter command(begin, end, status, exit):" << std::endl;
+        std::cin >> command;
+
+        if (command == "begin") {
+            if (act) {
+                t_end = time(nullptr);
+                tasks[i].task = action;
+                tasks[i].time = difftime(t_end, t_begin) / 3600;
+                i++;
+            }
+
+            std::cout << "Enter task:" <<std::endl;
+            std::cin >> action;
+
+            t_begin = time(nullptr);
+            act = true;
+        } else if (command == "end" && act) {
+            t_end = time(nullptr);
+            tasks[i].task = action;
+            tasks[i].time = difftime(t_end, t_begin) / 3600;
+
+            act = false;
+            action = "";
+            i++;
+        }else if(command == "status")
+        {
+            for(int j = 0; j < i; j++)
+            {
+                std::cout << tasks[j].task << " "
+                                << std::fixed << std::setprecision(2) << tasks[j].time << "h" << std::endl;
+            }
+            std::cout << "Current task: " << action << std::endl;
+        }
+    }while(command != "exit" && i < 20);
+
+    return 0;
+}
