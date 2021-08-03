@@ -1,0 +1,30 @@
+#include <iostream>
+#include <ctime>
+#include <iomanip>
+
+int main() {
+    std::time_t time = std::time(nullptr);
+    std::tm* local = std::localtime(&time);
+
+    local->tm_min = 0;
+    local->tm_sec = 0;
+    time = mktime(local);
+
+    std::cout << "Enter time(MM:SS):" << std::endl;
+    std::cin >> std::get_time(local, "%M:%S");
+
+    std::time_t time_begin = mktime(local);
+
+    do
+    {
+        local = localtime(&time_begin);
+        std::cout << std::put_time(local, "%M:%S") << std::endl;
+        time_begin--;
+        if(time_begin == time)
+        {
+            std::cout << "DING! DING! DING!" << std::endl;
+        }
+    }while(time_begin > time);
+
+    return 0;
+}
