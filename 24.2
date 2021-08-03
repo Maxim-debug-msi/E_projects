@@ -1,0 +1,65 @@
+#include <iostream>
+#include <ctime>
+#include <iomanip>
+#include <vector>
+#include <string>
+
+struct calendar
+{
+    std::string f_name;
+    std::time_t date;
+};
+
+int main()
+{
+    std::vector<calendar> birthdays;
+    std::time_t time = std::time(nullptr);
+    std::tm* local_time = localtime(&time);
+    std::string name;
+    int i = 0;
+
+    do {
+        std::cout << "Enter name and bd:" << std::endl;
+        std::cin >> name;
+        if(name == "end") continue;
+        birthdays.push_back(calendar{});
+        std::cin >> std::get_time(local_time, "%Y/%m/%d");
+
+        birthdays[i].f_name = name;
+        birthdays[i].date = mktime(local_time);
+        i++;
+    }while(name != "end");
+
+    int var = 0;
+    local_time = localtime(&time);
+    local_time->tm_year = 121;
+    local_time->tm_mon = 11;
+    local_time->tm_mday = 31;
+    std::cout << asctime(local_time) << std::endl;
+    std::time_t tmp_past = mktime(local_time);
+
+    for(int j = 0; j < birthdays.capacity(); j++)
+    {
+        local_time = localtime(&birthdays[j].date);
+        local_time->tm_year = 121;
+        std::time_t tmp = mktime(local_time);
+        if(!tmp_past)
+        {
+            tmp_past = tmp;
+        }
+        if(tmp == time)
+        {
+            std::cout << "Happy birth day " << birthdays[j].f_name << "!" << std::endl;
+            continue;
+        }
+        else if(tmp > time && tmp <= tmp_past)
+        {
+            tmp_past = tmp;
+            var = j;
+        }
+    }
+    local_time = localtime(&birthdays[var].date);
+    std::cout << "Upcoming birthday: " << birthdays[var].f_name << " " << asctime(local_time) << std::endl;
+
+    return 0;
+}
