@@ -20,6 +20,7 @@ int main() {
         local = localtime(&time_begin);
         std::cout << std::put_time(local, "%M:%S") << std::endl;
         time_begin--;
+        _sleep(1000);
         if(time_begin == time)
         {
             std::cout << "DING! DING! DING!" << std::endl;
