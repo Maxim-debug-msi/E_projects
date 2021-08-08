@@ -1,0 +1,100 @@
+#include <iostream>
+#include <ctime>
+#include <random>
+#include <map>
+#include <string>
+
+class Track
+{
+    std::time_t time = std::time(nullptr);
+    std::tm* creation_date = localtime(&time);
+    int duration = rand() % 91 + 90;
+
+    public:
+    std::string song_title;
+    void showInfo()
+    {
+        std::cout << song_title << "\n" << std::asctime(creation_date) << duration << std::endl;
+        std::cout << std::endl;
+    }
+};
+
+class Player
+{
+public:
+    std::map<std::string, int> songs = {{"Monster", 0},
+                                        {"Iron Man 2", 1},
+                                        {"Black in Black", 2},
+                                        {"GP-Rock Version", 3}};
+
+    std::map<std::string, int>::iterator it = songs.begin();
+
+    void shift(int ignore)
+    {
+        int r;
+        do
+        {
+            r = rand() % 4;
+        }while(r == ignore);
+        it = songs.begin();
+        std::advance(it, r);
+    }
+};
+
+int main() {
+    srand(time(nullptr));
+
+    Player* player = new Player;
+    Track* track = new Track[4];
+
+    std::string command;
+    bool play = false;
+
+    do
+    {
+        std::cout << "Enter command:" <<std::endl;
+        std::cin >> command;
+
+        if(command == "play" && !play)
+        {
+            std::cout << "Enter song title:" << std::endl;
+            std::cin >> command;
+
+            player->it = player->songs.find(command);
+            track[player->it->second].song_title = player->it->first;
+            track[player->it->second].showInfo();
+
+            play = true;
+            continue;
+        }
+        else if(command == "pause" && play)
+        {
+            std::cout << "Pause" << std::endl;
+            play = false;
+            continue;
+        }
+        else if(command == "next")
+        {
+            player->shift(player->it->second);
+            track[player->it->second].song_title = player->it->first;
+            track[player->it->second].showInfo();
+            play = true;
+            continue;
+        }
+        else if(command == "stop" && play)
+        {
+            std::cout << "Stop" << std::endl;
+            play = false;
+            continue;
+        }
+
+    }while(command != "exit");
+
+
+
+    delete player;
+    player = nullptr;
+    delete[] track;
+    track = nullptr;
+    return 0;
+}
