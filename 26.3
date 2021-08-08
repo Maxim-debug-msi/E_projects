@@ -1,0 +1,79 @@
+#include <iostream>
+
+class Display
+{
+    unsigned int display[80][50] = {{0}};
+
+public:
+    unsigned int begin[2] = {5, 5};
+    unsigned int height = 5;
+    unsigned int wight = 4;
+
+    void output()
+    {
+        for(int i = 0; i < 80; i++)
+        {
+            for(int j = 0; j < 50; j++)
+            {
+                if((i >= begin[0] && i <= begin[0] + height - 1) && (j >= begin[1] && j <= begin[1] + wight - 1)){
+                    display[i][j] = 1;
+                }
+                std::cout << display[i][j] << " ";
+                display[i][j] = 0;
+            }
+            std::cout << std::endl;
+        }
+    }
+};
+
+int main() {
+    Display* monitor = new Display;
+
+    std::string command;
+    unsigned int x, y;
+
+    do{
+        std::cout << "Enter command(move, resize, display, close):" << std::endl;
+        std::cin >> command;
+
+        if(command == "move"){
+            std::cout << "Enter coordinates:" << std::endl;
+            std::cin >> x >> y;
+
+            if(x > 79 || x < 0 || y > 79 || y < 0){
+                std::cout << "Error! Coordinates are outside the display!" << std::endl;
+                continue;
+            }
+            else if(x + monitor->begin[0] > 79 || y + monitor->begin[1] > 49){
+                 std::cout << "Error! Window extends beyond the display boundary!" << std::endl;
+                continue;
+            }
+            else{
+                monitor->begin[0] = x;
+                monitor->begin[1] = y;
+                continue;
+            }
+        }
+        else if(command == "resize"){
+            std::cout << "Enter new size(height, wight):" << std::endl;
+            std::cin >> x >> y;
+
+            if(x + monitor->begin[0] > 79 || y + monitor->begin[1] > 49){
+                std::cout << "Error! Window extends beyond the display boundary!" << std::endl;
+                continue;
+            }
+            else{
+                monitor->height = x;
+                monitor->wight = y;
+                continue;
+            }
+        }
+        else if(command == "display"){
+            monitor->output();
+        }
+    }while(command != "close");
+
+    delete monitor;
+    monitor = nullptr;
+    return 0;
+}
