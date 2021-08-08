@@ -1,0 +1,112 @@
+#include <iostream>
+#include <string>
+#include <map>
+
+class Phone
+{
+public:
+    class Phone_book
+    {
+    public:
+        class Contact_name
+        {
+        private:
+            std::map<std::string, std::string> contacts;
+        public:
+            std::map<std::string, std::string>::iterator c_it = contacts.begin();
+
+            void insert_c(std::string& n, std::string& c)
+            {
+                contacts.insert(std::pair<std::string, std::string>(n, c));
+            }
+
+            void find_contact(std::string& n)
+            {
+                c_it = contacts.find(n);
+            }
+        };
+
+        class Phone_number
+        {
+        private:
+            std::map<std::string, std::string> numbers;
+        public:
+            std::map<std::string, std::string>::iterator n_it = numbers.begin();
+
+            void insert_n(std::string& c, std::string& n)
+            {
+                numbers.insert(std::pair<std::string, std::string>(c, n));
+            }
+
+            void find_number(std::string& c)
+            {
+                n_it = numbers.find(c);
+            }
+        };
+    };
+};
+
+int main() {
+    Phone::Phone_book::Contact_name* contact_name = new Phone::Phone_book::Contact_name;
+    Phone::Phone_book::Phone_number* phone_number = new Phone::Phone_book::Phone_number;
+
+    std::string command;
+    std::string number;
+
+    do{
+        std::cout << "Enter command(add, call. sms, exit):" << std::endl;
+        std::cin >> command;
+
+        if(command == "add"){
+            std::cout << "Enter phone number and contact name:" << std::endl;
+            std::cin >> number >> command;
+            contact_name->insert_c(number, command);
+            phone_number->insert_n(command, number);
+            continue;
+        }
+        else if(command == "call"){
+            std::cout << "Enter phone number or contact name for call:" << std::endl;
+            std::cin >> number;
+
+            if(number[0] == '+'){
+                contact_name->find_contact(number);
+                std::cout << "CALL " << contact_name->c_it->second << " " << contact_name->c_it->first << std::endl;
+                continue;
+            }
+            else{
+                phone_number->find_number(number);
+                std::cout << "CALL " << phone_number->n_it->first << " " << phone_number->n_it->second << std::endl;
+                continue;
+            }
+        }
+        else if(command == "sms"){
+            std::cout << "Enter phone number or contact name for sms:" << std::endl;
+            std::cin >> number;
+
+            if(number[0] == '+'){
+                contact_name->find_contact(number);
+                std::cout << "SMS " << contact_name->c_it->second << " " << contact_name->c_it->first << std::endl;
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                std::getline(std::cin, command);
+                std::cout << "Send message." << std::endl;
+                std::cin.clear();
+                continue;
+            }
+            else{
+                phone_number->find_number(number);
+                std::cout << "SMS " << phone_number->n_it->first << " " << phone_number->n_it->second << std::endl;
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                std::getline(std::cin, command);
+                std::cout << "Send message." << std::endl;
+                std::cin.clear();
+                continue;
+            }
+        }
+    }while(command != "exit");
+
+    delete contact_name;
+    contact_name = nullptr;
+    delete phone_number;
+    phone_number = nullptr;
+    return 0;
+}
