@@ -2,7 +2,7 @@
 
 class Display
 {
-    unsigned int display[80][50] = {{0}};
+    unsigned int display[80][50];
 
 public:
     unsigned int begin[2] = {5, 5};
@@ -15,11 +15,11 @@ public:
         {
             for(int j = 0; j < 50; j++)
             {
+                display[i][j] = 0;
                 if((i >= begin[0] && i <= begin[0] + height - 1) && (j >= begin[1] && j <= begin[1] + wight - 1)){
                     display[i][j] = 1;
                 }
                 std::cout << display[i][j] << " ";
-                display[i][j] = 0;
             }
             std::cout << std::endl;
         }
