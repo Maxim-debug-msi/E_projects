@@ -2,53 +2,45 @@
 #include <string>
 #include <map>
 
-class Phone
+class Contact_name
 {
+private:
+    std::map<std::string, std::string> contacts;
 public:
-    class Phone_book
+     std::map<std::string, std::string>::iterator c_it = contacts.begin();
+
+    void insert_c(std::string& n, std::string& c)
     {
-    public:
-        class Contact_name
-        {
-        private:
-            std::map<std::string, std::string> contacts;
-        public:
-            std::map<std::string, std::string>::iterator c_it = contacts.begin();
+        contacts.insert(std::pair<std::string, std::string>(n, c));
+    }
 
-            void insert_c(std::string& n, std::string& c)
-            {
-                contacts.insert(std::pair<std::string, std::string>(n, c));
-            }
-
-            void find_contact(std::string& n)
-            {
-                c_it = contacts.find(n);
-            }
-        };
-
-        class Phone_number
-        {
-        private:
-            std::map<std::string, std::string> numbers;
-        public:
-            std::map<std::string, std::string>::iterator n_it = numbers.begin();
-
-            void insert_n(std::string& c, std::string& n)
-            {
-                numbers.insert(std::pair<std::string, std::string>(c, n));
-            }
-
-            void find_number(std::string& c)
-            {
-                n_it = numbers.find(c);
-            }
-        };
-    };
+    void find_contact(std::string& n)
+    {
+      c_it = contacts.find(n);
+    }
 };
 
+class Phone_number
+{
+private:
+    std::map<std::string, std::string> numbers;
+public:
+    std::map<std::string, std::string>::iterator n_it = numbers.begin();
+
+    void insert_n(std::string& c, std::string& n)
+    {
+        numbers.insert(std::pair<std::string, std::string>(c, n));
+    }
+
+    void find_number(std::string& c)
+    {
+        n_it = numbers.find(c);
+    }
+ };
+
 int main() {
-    Phone::Phone_book::Contact_name* contact_name = new Phone::Phone_book::Contact_name;
-    Phone::Phone_book::Phone_number* phone_number = new Phone::Phone_book::Phone_number;
+    Contact_name* contact_name = new Contact_name;
+    Phone_number* phone_number = new Phone_number;
 
     std::string command;
     std::string number;
