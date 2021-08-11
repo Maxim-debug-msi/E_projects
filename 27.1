@@ -1,0 +1,250 @@
+#include <iostream>
+#include <ctime>
+#include <vector>
+#include <cassert>
+#include <fstream>
+
+class LargeBranch
+{
+    int count = 0;
+    std::string* tenants;
+
+public:
+
+    void fill_tenants(int& index, const std::string& name)
+    {
+        tenants[index] = name;
+    }
+
+    std::string getTenant(int& index)
+    {
+        if(index < 0 || index >= count) return "";
+        return tenants[index];
+    }
+
+    int getTenantsCount()
+    {
+        return count;
+    }
+
+    LargeBranch(int inCount) : count(inCount)
+    {
+        assert(inCount >= 0);
+        tenants = new std::string[count];
+    }
+
+};
+
+class Tree
+{
+    int count = 0;
+    LargeBranch** branch = nullptr;
+
+public:
+
+    LargeBranch* getBranch(int& index)
+    {
+        if(index < 0 || index >= count) return nullptr;
+        return branch[index];
+    }
+
+    int getBranchCount()
+    {
+        return count;
+    }
+
+    int getTenantsCount(int& index)
+    {
+        assert(index >= 0);
+        return branch[index]->getTenantsCount();
+    }
+
+    Tree(int& inCount_b, int& inCount_t) : count(inCount_b)
+    {
+        assert(inCount_b >= 0);
+        branch = new LargeBranch*[inCount_b];
+
+        for(int i = 0; i < count; i++)
+        {
+            branch[i] = new LargeBranch(inCount_t);
+        }
+    }
+
+};
+
+int main() {
+    std::srand(std::time(nullptr));
+    std::ifstream out;
+    out.open("C:\\E_files\\names.txt", std::ios::app);
+
+    Tree* tree{(Tree*) operator new(sizeof(Tree) * 5)};
+
+    std::string name;
+
+    for(int i{}; i < 5; i++)//Implemented automatic input from file
+    {
+        int count_b{rand() % 3 + 3};
+        int count_t{(rand() % 2 + 2) + 1};
+        new(tree + i) Tree(count_b, count_t);
+
+        for(int j{0}; j < (tree + i)->getBranchCount(); j++)
+        {
+            for(int k{0}; k < (tree + i)->getTenantsCount(j); k++)
+            {
+#if 0
+                std::cout << "Enter name of elf:" << std::endl;
+                std::cin >> name;
+#endif
+#if 1
+                out >> name;
+#endif
+                if(name != "none") (tree + i)->getBranch(j)->fill_tenants(k, name);
+                else (tree + i)->getBranch(j)->fill_tenants(k, "");
+            }
+        }
+    }
+
+    do {
+        std::cout << "Enter a name to search for neighbors('list' to list, 'exit' to exit):" << std::endl;
+        std::cin >> name;
+
+        if(name != "list" && name != "exit") {
+            for (int i{}; i < 5; i++) {
+                for (int j{}; j < (tree + i)->getBranchCount(); j++) {
+                    for (int k{}; k < (tree + i)->getTenantsCount(j); k++) {
+                        if (name == (tree + i)->getBranch(j)->getTenant(k)) {
+                            std::cout << "Tree " << i + 1 << ":" << std::endl;
+                            std::cout << "Branch " << j + 1 << ":" << std::endl;
+                            for (int t = 0; t < (tree + i)->getBranch(j)->getTenantsCount(); t++) {
+                                std::cout << (tree + i)->getBranch(j)->getTenant(t) << std::endl;
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        else if(name == "list") {
+            for (int i{}; i < 5; i++) {
+                std::cout << "Tree " << i + 1 << std::endl;
+                for (int j{}; j < (tree + i)->getBranchCount(); j++) {
+                    std::cout << "Branch " << j + 1 << std::endl;
+                    std::cout << "Tenants: " << std::endl;
+                    for (int k{}; k < (tree + i)->getTenantsCount(j); k++) {
+                        std::cout << (tree + i)->getBranch(j)->getTenant(k) << std::endl;
+                    }
+                }
+            }
+        }
+    }while(name != "exit");
+
+
+    delete[] tree;
+    tree = nullptr;
+    return 0;
+}
+
+//file
+
+Jacob	
+Emily	
+Michael	
+Emma	
+Joshua	
+Madison	
+Matthew	
+Olivia	
+Ethan	
+Hannah	
+Andrew	
+Abigail
+Daniel	
+Isabella
+William	
+Ashley
+Joseph	
+Samantha	
+Christopher	
+Elizabeth
+Anthony	
+Alexis
+Ryan	
+Sarah	
+Nicholas	
+Grace
+David	
+Alyssa
+Alexander	
+Sophia
+Tyler	
+Lauren
+James	
+Brianna
+John	
+Kayla
+Dylan	
+Natalie
+Nathan	
+Anna
+Jonathan	
+Jessica
+Brandon	
+Taylor
+Samuel	
+Chloe	
+Christian	
+Hailey	
+Benjamin	
+Ava	
+Zachary	
+Jasmine
+Logan	
+Sydney
+Jose	
+Victoria
+Noah	
+Ella
+Justin	
+Mia	
+Elijah	
+Morgan	
+Gabriel	
+Julia
+Caleb	
+Kaitlyn	
+Kevin	
+Rachel
+Austin	
+Katherine
+Robert	
+Megan	
+Thomas	
+Alexandra
+Connor	
+Jennifer	
+Evan	
+Destiny
+Aidan	
+Allison
+Jack	
+Savannah
+Luke	
+Haley
+Jordan	
+Mackenzie
+Angel	
+Brooke	
+Isaiah	
+Maria	
+Isaac	
+Nicole	
+Jason	
+Makayla
+Jackson	
+Trinity
+Hunter	
+Kylie
+Cameron	
+Kaylee
+Gavin	
+Paige
