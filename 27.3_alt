@@ -5,7 +5,7 @@
 class WorkGroup{
     int count{};
     int left{};
-    std::vector<char> workers{'-'};
+    std::vector<char> workers;
 
 public:
 
