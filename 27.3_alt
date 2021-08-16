@@ -1,0 +1,99 @@
+#include <iostream>
+#include <cassert>
+#include <vector>
+
+class WorkGroup{
+    int count{};
+    int left{};
+    std::vector<char> workers{'-'};
+
+public:
+
+    void fillWorkers(int& index, char& c){
+        workers[index] = c;
+    }
+
+    bool getFillTask()
+    {
+        if(workers[count - 1] == 'A' || workers[count - 1] == 'B' || workers[count - 1] == 'C') return true;
+        else return false;
+    }
+
+    int getLeft() const
+    {
+        return left;
+    }
+
+    void leftNoTask(int& tasks){
+        left -= tasks;
+    }
+
+    int getCount() const
+    {
+        return count;
+    }
+
+    char getWorker(int& index){
+        assert(index >= 0 || index < count);
+        return workers[index];
+    }
+
+    explicit WorkGroup(int& inCount) : count(inCount), left(inCount){
+        assert(inCount > 0);
+        workers.resize(count);
+    }
+
+    ~WorkGroup() = default;
+
+};
+
+int main() {
+    std::cout << "Enter the number of workgroups:" << std::endl;
+    int count_g{};
+    std::cin >> count_g;
+
+    WorkGroup* workGroup = (WorkGroup*) operator new(sizeof(WorkGroup) * count_g);
+
+    for(int i{}; i < count_g; i++){
+        int count_w{};
+        std::cout << "Enter the number of employees in the group " << i + 1 << ":" << std::endl;
+        std::cin >> count_w;
+        new(workGroup + i) WorkGroup(count_w);
+    }
+
+
+    bool fillWork{false};
+
+    do{
+        int command{};
+        std::cout << "Enter command:" << std::endl;
+        std::cin >> command;
+
+        for(int i{}; i < count_g; i++){
+            if(!((workGroup + i)->getFillTask())){
+                std::srand(command + i + 1);
+                int tasks = rand() % (workGroup + i)->getLeft() + 1;
+                int a{(workGroup + i)->getCount() - (workGroup + i)->getLeft()};
+                for(int j{a}; j < a + tasks; j++)
+                {
+                    char task = static_cast<char>(rand() % 3 + 65);
+                    (workGroup + i)->fillWorkers(j, task);
+                }
+                (workGroup + i)->leftNoTask(tasks);
+            }
+        }
+        for(int i{}; i < count_g; i++){
+            std::cout << "WorkGroup " << i + 1 << std::endl;
+            for(int j{}; j < (workGroup +  i)->getCount(); j++){
+                std::cout << (workGroup + i)->getWorker(j) << std::endl;
+            }
+        }
+        for(int i{}; i < count_g; i++){
+            fillWork = (workGroup + i)->getFillTask();
+            if(!fillWork) break;
+        }
+    }while(!fillWork);
+
+    delete workGroup;
+    return 0;
+}
