@@ -1,0 +1,128 @@
+#include <iostream>
+#include <ctime>
+#include <string>
+#include <vector>
+#include <fstream>
+
+class Branch{
+    Branch* largeBranch = nullptr;
+    int lb_count{};
+    Branch* tenants;
+    int t_count{};
+    std::string elfName = "None";
+public:
+    // elfName methods
+    std::string getElfName(){
+        return elfName;
+    }
+
+    void fillElfName(std::string& name){
+        elfName = name;
+    }
+    // largeBranch method
+    void fillLargeBranch(int& count){
+        largeBranch = new Branch[count];
+    }
+
+    Branch* getLargeBranch(int& index){
+        return largeBranch + index;
+    }
+
+    void fillLBCount(int& count){
+        lb_count = count;
+    }
+
+    int getLBCount() const{
+        return lb_count;
+    }
+    // tenants method
+    void fillTenants(int& count){
+        tenants = new Branch[count];
+    }
+
+    Branch* getTenants(int& index){
+        return tenants + index;
+    }
+
+    void fillTCount(int& count){
+        t_count = count;
+    }
+
+    int getTCount() const{
+        return t_count;
+    }
+
+};
+
+int main(){
+    std::srand(time(nullptr));
+    Branch* tree = new Branch[5];
+
+    std::ifstream out;
+    out.open("C:\\E_files\\names.txt", std::ios::binary);
+
+    std::string command{};
+
+    do {
+        std::cout << "Enter command:" << std::endl;
+        std::cin >> command;
+
+        if(command == "add") {
+            for (int i{0}; i < 5; i++) {
+                int count_b{rand() % 3 + 3};
+                tree[i].fillLargeBranch(count_b);
+                tree[i].fillLBCount(count_b);
+                for (int j{}; j < count_b; j++) {
+                    int count_t{(rand() % 2 + 2) + 1};
+                    tree[i].getLargeBranch(j)->fillTenants(count_t);
+                    tree[i].getLargeBranch(j)->fillTCount(count_t);
+                    for (int k{}; k < count_t; k++) {
+                        std::string name{};
+#if 1
+                        out >> name;
+#endif
+#if 0
+                        std::cout << "Enter name of elf:" <<std::endl;
+                        std::cin >> name;
+#endif
+                        tree[i].getLargeBranch(j)->getTenants(k)->fillElfName(name);
+                    }
+                }
+            }
+            out.close();
+        }
+        else if(command == "find"){
+            std::cout << "Enter name to find:" << std::endl;
+            std::cin >> command;
+
+            for(int i{}; i < 5; i++){
+                for(int j{}; j < tree[i].getLBCount(); j++){
+                    for(int k{}; k < tree[i].getLargeBranch(j)->getTCount(); k++){
+                        if(tree[i].getLargeBranch(j)->getTenants(k)->getElfName() == command){
+                            std::cout << "Neighbors(tree " << i + 1 << ", branch " << j + 1 << "):" << std::endl;
+                            for(int l{}; l < tree[i].getLargeBranch(j)->getTCount(); l++){
+                                std::cout << tree[i].getLargeBranch(j)->getTenants(l)->getElfName() << std::endl;
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        else if(command == "list") {
+            for (int i{}; i < 5; i++) {
+                std::cout << "Tree " << i + 1 << ":" << std::endl;
+                for (int j{}; j < tree[i].getLBCount(); j++) {
+                    std::cout << "Branch " << j + 1 << ":" << std::endl;
+                    for (int k{}; k < tree[i].getLargeBranch(j)->getTCount(); k++) {
+                        std::cout << tree[i].getLargeBranch(j)->getTenants(k)->getElfName() << std::endl;
+                    }
+                    std::cout << std::endl;
+                }
+            }
+        }
+    }while(command != "exit");
+
+   delete[] tree;
+   return 0;
+}
