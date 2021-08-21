@@ -1,0 +1,104 @@
+#include <iostream>
+#include <thread>
+#include <vector>
+#include <cassert>
+#include <map>
+#include <string>
+
+class Swimmer{
+    Swimmer* swimmer = nullptr;
+    std::vector<Swimmer*> swimmers;
+    int speed{};
+    int distance{};
+    int time{};
+    std::string name{};
+
+public:
+    void setSwimmer(){
+        swimmer = new Swimmer;
+        swimmers.push_back(swimmer);
+    }
+
+    void setSpeed(int& inSpeed){
+        speed = inSpeed;
+    }
+
+    void setName(std::string& inName){
+        name = inName;
+    }
+
+    std::string getName() const{
+        return name;
+    }
+
+    int getTime() const{
+        return time;
+    }
+
+    Swimmer* getSwimmer(int& index){
+        assert(index >= 0);
+        return swimmers[index];
+    }
+
+    void status() noexcept{
+        do{
+            distance += speed;
+            if(distance > 100) distance = 100;
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+            std::cout << "Swimmer " << name << " swam: " << distance << "m." << std::endl;
+            time++;
+        }while(distance < 100);
+    }
+
+};
+
+void getStatus(Swimmer swim, int&& index) noexcept{
+    swim.getSwimmer(index)->status();
+}
+
+int main() {
+    Swimmer swim;
+    int min_speed{100};
+
+    for(int i{}; i < 6; i++) {
+        swim.setSwimmer();
+        std::cout << "Enter swimmer name and speed:" << std::endl;
+        std::string name{};
+        std::cin >> name;
+        int speed{};
+        std::cin >> speed;
+        min_speed = (min_speed > speed) ? speed : min_speed;
+        swim.getSwimmer(i)->setName(name);
+        swim.getSwimmer(i)->setSpeed(speed);
+    }
+
+    std::thread swimmer_1(getStatus, swim, 0);
+    std::thread swimmer_2(getStatus, swim, 1);
+    std::thread swimmer_3(getStatus, swim, 2);
+    std::thread swimmer_4(getStatus, swim, 3);
+    std::thread swimmer_5(getStatus, swim, 4);
+    std::thread swimmer_6(getStatus, swim, 5);
+
+    std::this_thread::sleep_for(std::chrono::seconds(static_cast<int>(ceil(100 / min_speed)) + 1));
+
+    swimmer_1.join();
+    swimmer_2.join();
+    swimmer_3.join();
+    swimmer_4.join();
+    swimmer_5.join();
+    swimmer_6.join();
+
+    std::multimap<int, std::string> swim_list;
+
+    for(int i{}; i < 6; i++){
+        swim_list.insert(std::pair<int ,std::string>
+                (swim.getSwimmer(i)->getTime(), swim.getSwimmer(i)->getName()));
+    }
+
+    std::cout << std::endl <<  "Swim_list:" << std::endl;
+    for(std::multimap<int, std::string>::iterator it = swim_list.begin(); it != swim_list.end(); it++){
+        std::cout << it->second << " - " << it->first << std::endl;
+    }
+
+    return 0;
+}
