@@ -1,0 +1,41 @@
+#include <iostream>
+#include <thread>
+#include <mutex>
+#include <cassert>
+
+std::mutex m;
+
+void status(char&& train, int time){
+    std::string command{};
+    std::this_thread::sleep_for(std::chrono::seconds(time));
+    std::cout << "Train " << train << " is waiting for an empty seat." << std::endl;
+    m.lock();
+    std::cout << "Train " << train << " has arrived at the station." << std::endl;
+    std::cout << "Enter the command 'depart' to send the train:" << std::endl;
+    do {
+        std::cin >> command;
+        if(command != "depart") std::cout << "Incorrect command! Try again." << std::endl;
+    }while(command != "depart");
+    m.unlock();
+}
+
+
+int main() {
+    int time[3]{};
+
+    for(int i{}; i < 3; i++){
+        std::cout << "Enter time for train " << i + 1 << ":" << std::endl;
+        std::cin >> time[i];
+        assert(time[i] > 0);
+    }
+
+    std::thread a(status, 'A', time[0]);
+    std::thread b(status, 'B', time[1]);
+    std::thread c(status, 'C', time[2]);
+
+
+    a.join();
+    b.join();
+    c.join();
+    return 0;
+}
