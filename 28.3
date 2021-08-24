@@ -1,0 +1,84 @@
+#include <iostream>
+#include <thread>
+#include <mutex>
+#include <ctime>
+#include <vector>
+
+
+class Restaurant{
+    std::mutex m;
+    std::string food[5]{"pizza", "soup", "steak", "salad", "sushi"};
+    std::vector<std::string> order{};
+    std::vector<std::string> ready{};
+    int order_wait{};
+    int kitchen_wait{};
+    int delivery_wait{30};
+
+public:
+    void customer_order(){
+        for(int i{}; i < 10; i++) {
+            order_wait = rand() % 6 + 5;
+            std::this_thread::sleep_for(std::chrono::seconds(order_wait));
+            m.lock();
+            order.push_back(food[rand() % 5]);
+            m.unlock();
+            std::cout << "Order " << i + 1 << ": " << order[order.size() - 1] <<  " is accepted." << std::endl;
+        }
+    }
+    void kitchen(){
+        for(int i{}; i < 10; i++) {
+            kitchen_wait = rand() % 11 + 5;
+            std::this_thread::sleep_for(std::chrono::seconds(kitchen_wait));
+            if (!order.empty()) {
+                m.lock();
+                std::cout << "Order " << i + 1 << ": " << order[0] << " is ready." << std::endl;
+                ready.push_back(order[0]);
+                order.erase(order.begin());
+                m.unlock();
+            }
+            else i--;
+        }
+    }
+
+    void delivery(){
+        for(int i{}; i < 10; i++){
+            std::this_thread::sleep_for(std::chrono::seconds(delivery_wait));
+            if(!ready.empty()){
+                m.lock();
+                std::cout << "Order " << i + 1 << ": " << ready[0] << " has delivered." << std::endl;
+                ready.erase(ready.begin());
+                m.unlock();
+            }
+            else{
+                i--;
+            }
+        }
+    }
+};
+
+void get_customer_order(Restaurant* rest){
+    rest->customer_order();
+}
+
+void get_kitchen(Restaurant* rest){
+    rest->kitchen();
+}
+
+void get_delivery(Restaurant* rest){
+    rest->delivery();
+}
+
+int main() {
+    std::srand(time(nullptr));
+    Restaurant* rest = new Restaurant;
+
+    std::thread order(get_customer_order, rest);
+    std::this_thread::sleep_for(std::chrono::seconds(10));
+    std::thread kitchen(get_kitchen, rest);
+    std::thread delivery(get_delivery, rest);
+
+    order.join();
+    kitchen.detach();
+    delivery.join();
+    return 0;
+}
