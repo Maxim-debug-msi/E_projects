@@ -1,0 +1,58 @@
+#include <iostream>
+#include <thread>
+#include <map>
+#include <string>
+#include <mutex>
+
+void swim(const std::string& name, const int& speed, std::multimap<int, std::string>* pMap){
+    std::mutex m;
+    int distance{};
+    int time{};
+
+    do{
+        distance += speed;
+        if(distance > 100) distance = 100;
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+        std::cout << "Swimmer " << name << " swam: " << distance << "m." << std::endl;
+        time++;
+    }while(distance < 100);
+
+    m.lock();
+    pMap->insert(std::pair<int, std::string>(time, name));
+    m.unlock();
+}
+
+int main(){
+    std::multimap<int, std::string> swim_list;
+    std::multimap<int, std::string>* pMap = &swim_list;
+    std::string names[6]{};
+    int speeds[6]{};
+
+    for(int i{}; i < 6; i++) {
+        std::cout << "Enter " << i + 1 << " swimmer name and speed:" << std::endl;
+        std::cin >> names[i];
+        std::cin >> speeds[i];
+    }
+
+    std::thread s_1(swim, names[0], speeds[0], pMap);
+    std::thread s_2(swim, names[1], speeds[1], pMap);
+    std::thread s_3(swim, names[2], speeds[2], pMap);
+    std::thread s_4(swim, names[3], speeds[3], pMap);
+    std::thread s_5(swim, names[4], speeds[4], pMap);
+    std::thread s_6(swim, names[5], speeds[5], pMap);
+
+
+    s_1.join();
+    s_2.join();
+    s_3.join();
+    s_4.join();
+    s_5.join();
+    s_6.join();
+
+    std::cout << std::endl <<  "Swim_list:" << std::endl;
+    for(std::multimap<int, std::string>::iterator it = swim_list.begin(); it != swim_list.end(); it++) {
+        std::cout << it->second << " - " << it->first << "s" << std::endl;
+    }
+
+    return 0;
+}
