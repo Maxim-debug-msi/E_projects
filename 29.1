@@ -1,0 +1,58 @@
+#include <iostream>
+
+class Animal{
+public:
+    int x{};
+
+    virtual void voice(){
+     std::cout << " ";
+    }
+
+    virtual void meet_voice(){
+        std::cout << " ";
+    }
+};
+
+class Cat : public Animal{
+public:
+    int x{2};
+    void voice() override{
+        std::cout << "Meow!";
+    }
+
+    void meet_voice() override{
+        std::cout << "Purr-Purr";
+    }
+};
+
+class Dog : public Animal{
+public:
+    int x{1};
+    void voice() override{
+        std::cout << "Bark!";
+    }
+
+    void meet_voice() override{
+        std::cout << "Woof-Woof";
+    }
+};
+
+void meeting(Animal *a, Animal *b){
+
+    if(a->x == b->x) {
+        a->meet_voice();
+    }
+    else {
+        a->voice();
+        std::cout << "-";
+        b->voice();
+        std::cout << std::endl;
+    }
+}
+
+int main() {
+    Animal *a = new Dog();
+    Animal *b = new Cat();
+    meeting(a, a);
+    return 0;
+}
