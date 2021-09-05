@@ -1,0 +1,35 @@
+#include <iostream>
+#include <cpr/cpr.h>
+
+int main() {
+    std::string command{};
+    cpr::Response res{};
+
+   do{
+    std::cout << "Enter command('get', 'post', 'put', 'delete', 'patch', and 'exit' to exit):" << std::endl;
+    std::cin >> command;
+
+    if(command == "get"){
+        res = cpr::Get(cpr::Url("http://httpbin.org/get"));
+        std::cout << res.text << std::endl;
+    }
+    else if(command == "post"){
+        res = cpr::Post(cpr::Url("http://httpbin.org/post"));
+        std::cout << res.text << std::endl;
+    }
+    else if(command == "put"){
+        res = cpr::Put(cpr::Url("http://httpbin.org/put"));
+        std::cout << res.text << std::endl;
+    }
+    else if(command == "delete"){
+        res = cpr::Delete(cpr::Url("http://httpbin.org/delete"));
+        std::cout << res.text << std::endl;
+    }
+    else if(command == "patch"){
+        res = cpr::Patch(cpr::Url("http://httpbin.org/patch"));
+        std::cout << res.text << std::endl;
+    }
+   }while(command != "exit");
+
+    return 0;
+}
