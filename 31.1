@@ -1,0 +1,79 @@
+#include <iostream>
+#include <string>
+
+class Toy{
+public:
+    Toy() : name{"SomeToy"}{};
+
+    explicit Toy(const std::string& _name) : name(_name){};
+
+private:
+    std::string name{};
+};
+
+class shared_ptr_toy{
+public:
+
+    shared_ptr_toy(){
+        pToy = new Toy();
+        counter = new unsigned int{1};
+    }
+
+    explicit shared_ptr_toy(std::string& toyName){
+        pToy = new Toy(toyName);
+        counter = new unsigned int{1};
+    }
+
+    explicit shared_ptr_toy(Toy* toy_ptr) : pToy{toy_ptr}{
+        counter = new unsigned int{1};
+    };
+
+    shared_ptr_toy(const shared_ptr_toy& oth){
+        counter = oth.counter;
+        pToy = new Toy(*oth.pToy);
+        ++*counter;
+    }
+
+    shared_ptr_toy& operator= (const shared_ptr_toy& oth){
+        if(this == &oth) return *this;
+        if(pToy != nullptr) delete pToy;
+        pToy = oth.pToy;
+        return *this;
+    }
+
+    ~shared_ptr_toy(){
+        if(counter != nullptr) --*counter;
+        if(*counter == 0 && pToy != nullptr){
+            delete pToy;
+            pToy = nullptr;
+            delete counter;
+            counter = nullptr;
+        }
+    }
+
+private:
+    Toy* pToy{nullptr};
+    unsigned int* counter{nullptr};
+};
+
+class example{
+    shared_ptr_toy p{nullptr};
+
+public:
+    explicit example(shared_ptr_toy& _p) : p{_p}{};
+
+    ~example() = default;
+};
+
+Toy* make_shared_toy(const std::string& toy_name){
+    return new Toy(toy_name);
+}
+
+int main(){
+    shared_ptr_toy p(make_shared_toy("Ball"));
+
+    example a(p);
+    example b(p);
+    
+    return 0;
+}
