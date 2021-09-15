@@ -5,7 +5,7 @@ class Toy{
 public:
     Toy() : name{"SomeToy"}{};
 
-    explicit Toy(const std::string& _name) : name(_name){};
+    explicit Toy(std::string  _name) : name(std::move(_name)){};
 
 private:
     std::string name{};
@@ -36,14 +36,14 @@ public:
 
     shared_ptr_toy& operator= (const shared_ptr_toy& oth){
         if(this == &oth) return *this;
-        if(pToy != nullptr) delete pToy;
+
         pToy = oth.pToy;
         return *this;
     }
 
     ~shared_ptr_toy(){
-        if(counter != nullptr) --*counter;
-        if(*counter == 0 && pToy != nullptr){
+        --*counter;
+        if(*counter == 0){
             delete pToy;
             pToy = nullptr;
             delete counter;
@@ -74,6 +74,6 @@ int main(){
 
     example a(p);
     example b(p);
-    
+
     return 0;
 }
