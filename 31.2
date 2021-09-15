@@ -1,0 +1,307 @@
+#include <iostream>
+#include <vector>
+#include <map>
+
+class IGraph {
+
+public:
+
+    virtual ~IGraph() = default;
+
+    IGraph() = default; // нужно реализовать в наследниках тоже
+
+    IGraph(const IGraph& _oth) = default; // нужно реализовать в наследниках тоже
+
+    virtual void AddEdge(int from, int to) = 0; // Метод принимает вершины начала и конца ребра и добавляет ребро
+
+    virtual int VerticesCount() const = 0; // Метод должен считать текущее количество вершин
+
+    virtual std::vector<int> Vertices() const = 0; // Метод должен вернуть текущие список текущих вершин
+
+    virtual std::vector<int> GetNextVertices(int vertex) const = 0; // Для конкретной вершины метод возвращает вектор с вершинами, в которые можно дойти по ребру из данной
+
+    virtual std::vector<int> GetPrevVertices(int vertex) const = 0; // Для конкретной вершины метод возвращает вектор с вершинами, из которых можно дойти по ребру в данную
+
+};
+
+class ListGraph : public IGraph{
+public:
+    ~ListGraph() override = default;
+
+    explicit ListGraph(int& size) : v(size){
+        for(int i{1}; i <= v; ++i){
+            list_to[i];
+            list_from[i];
+        }
+    };
+
+    ListGraph(const ListGraph& _oth) : list_to(_oth.list_to), list_from(_oth.list_from), v(_oth.v){};
+
+    ListGraph& operator= (const ListGraph& _oth){
+        if(this == &_oth)
+            return *this;
+
+        list_to = _oth.list_to;
+        list_from = _oth.list_from;
+        v = _oth.v;
+
+        return *this;
+    }
+
+    void AddEdge(int from, int to) override{
+        list_to[from].push_back(to);
+        list_from[to].push_back(from);
+    }
+
+    int VerticesCount() const override{
+        return v;
+    }
+
+    std::vector<int> Vertices() const override{
+        std::vector<int> ver{};
+
+        for(auto it{list_to.begin()}; it != list_to.end(); ++it){
+            ver.push_back(it->first);
+        }
+
+        return ver;
+    }
+
+    std::vector<int> GetNextVertices(int vertex) const override{
+        std::vector<int> ver{};
+        auto it{list_to.find(vertex)};
+
+        for(int i{}; i < it->second.size(); ++i)
+            ver.push_back(it->second[i]);
+
+        return ver;
+    }
+
+    std::vector<int> GetPrevVertices(int vertex) const override{
+        std::vector<int> ver{};
+        auto it{list_from.find(vertex)};
+
+        for(int i{}; i < it->second.size(); ++i)
+            ver.push_back(it->second[i]);
+
+        return ver;
+    }
+
+    void list_(){
+        for(auto it{list_to.begin()}; it != list_to.end(); ++it){
+            std::cout << it->first << " - ";
+            for(int j{}; j < it->second.size(); ++j){
+                std::cout << it->second[j] << " ";
+            }
+            std::cout << std::endl;
+        }
+    }
+private:
+    std::map<int, std::vector<int>> list_to{};
+    std::map<int, std::vector<int>> list_from{};
+    int v{};
+};
+
+class MatrixGraph : public IGraph{
+public:
+    ~MatrixGraph() override{
+        for(int i{}; i < v; ++i)
+            delete[] matrix[i];
+        delete[] matrix;
+    }
+
+    explicit MatrixGraph(int& size) : matrix(new int* [size]), v(size){
+        for(int i{}; i < size; ++i)
+            matrix[i] = new int[size];
+
+        for(int i{}; i < v; ++i){
+            for(int j{}; j < v; ++j){
+                matrix[i][j] = 0;
+            }
+        }
+    }
+
+    MatrixGraph (const MatrixGraph& _oth) : matrix(_oth.matrix), v(_oth.v) {};
+
+    MatrixGraph& operator= (const MatrixGraph& _oth){
+        if(this == &_oth)
+            return *this;
+
+        matrix = _oth.matrix;
+        v = _oth.v;
+
+        return *this;
+    }
+
+    void AddEdge(int from, int to) override {
+        if(from <= v && to <= v)
+            matrix[from - 1][to - 1] = 1;
+        else std::cout << "Incorrect parameter!" << std::endl;
+    }
+
+    int VerticesCount() const override{
+        return v;
+    }
+
+    std::vector<int> Vertices() const override{
+        std::vector<int> vertices{};
+        for(int i{}; i < v; ++i)
+            vertices.push_back(i + 1);
+        return vertices;
+    }
+
+    std::vector<int> GetNextVertices(int vertex) const override{
+        std::vector<int> vertices{};
+        for(int i{}; i < v; ++i){
+            if(matrix[vertex - 1][i] == 1)
+                vertices.push_back(i + 1);
+        }
+        return vertices;
+    }
+
+    std::vector<int> GetPrevVertices(int vertex) const override{
+        std::vector<int> vertices{};
+        for(int i{}; i < v; ++i){
+            if(i == vertex - 1) ++i;
+            if(matrix[i][vertex - 1] == 1)
+                vertices.push_back(i + 1);
+        }
+        return vertices;
+    }
+
+    void list_(){
+        for(int i{}; i < v; ++i){
+            for(int j{}; j < v; ++j){
+                std::cout << matrix[i][j] << " ";
+            }
+            std::cout << std::endl;
+        }
+    }
+private:
+    int** matrix;
+    int v{};
+};
+
+int main() {
+    std::string command{};
+    bool matrix{false}, list{false};
+
+    std::cout << "What will you work with(matrix, list):" << std::endl;
+    std::cin >> command;
+
+    if(command == "matrix") matrix = true;
+    else if(command == "list") list = true;
+
+    std::cout << "Specify the number of vertices in the graph" << std::endl;
+    int ver{};
+    std::cin >> ver;
+
+    MatrixGraph m(ver);
+    ListGraph l(ver);
+
+    do {
+        std::cout << "Enter command(AddEdge, VCount, V, GetNextV, GetPrevV, list, exit):" << std::endl;
+        std::cin >> command;
+
+        if(command == "AddEdge"){
+            std::cout << "Specify the vertex of the start and end of the edge:" << std::endl;
+            int b{}, e{};
+            std::cin >> b >> e;
+            if(matrix){
+                m.AddEdge(b, e);
+                m.list_();
+            }
+            else if(list){
+                l.AddEdge(b, e);
+                l.list_();
+            }
+        }
+        else if(command == "VCount") {
+            if (matrix)
+                std::cout << m.VerticesCount() << std::endl;
+            else if (list) {
+                std::cout << l.VerticesCount() << std::endl;
+            }
+        }
+        else if(command == "V") {
+            if(matrix){
+                std::vector<int> vertices = m.Vertices();
+
+                for(int i{}; i < vertices.size(); ++i)
+                    std::cout << vertices[i] << " ";
+                std::cout << std::endl;
+            }
+            else if(list){
+                std::vector<int> vertices = l.Vertices();
+
+                for(int i{}; i < vertices.size(); ++i)
+                    std::cout << vertices[i] << " ";
+                std::cout << std::endl;
+            }
+        }
+        else if(command == "GetNextV"){
+            std::cout << "Specify the vertex:" << std::endl;
+            int vertex{};
+            std::cin >> vertex;
+
+            if(matrix){
+                std::vector<int> vertices = m.GetNextVertices(vertex);
+
+                if(vertices.empty())
+                    std::cout << "0" << std::endl;
+                else {
+                    for (int i{}; i < vertices.size(); ++i)
+                        std::cout << vertices[i] << " ";
+                    std::cout << std::endl;
+                }
+            }
+            else if(list){
+                std::vector<int> vertices = l.GetNextVertices(vertex);
+
+                if(vertices.empty())
+                    std::cout << "0" << std::endl;
+                else {
+                    for (int i{}; i < vertices.size(); ++i)
+                        std::cout << vertices[i] << " ";
+                    std::cout << std::endl;
+                }
+            }
+        }
+        else if(command == "GetPrevV"){
+            std::cout << "Specify the vertex:" << std::endl;
+            int vertex{};
+            std::cin >> vertex;
+
+            if(matrix){
+                std::vector<int> vertices = m.GetPrevVertices(vertex);
+
+                if(vertices.empty())
+                    std::cout << "0" << std::endl;
+                else {
+                    for (int i{}; i < vertices.size(); ++i)
+                        std::cout << vertices[i] << " ";
+                    std::cout << std::endl;
+                }
+            }
+            else if(list){
+                std::vector<int> vertices = l.GetPrevVertices(vertex);
+
+                if(vertices.empty())
+                    std::cout << "0" << std::endl;
+                else {
+                    for (int i{}; i < vertices.size(); ++i)
+                        std::cout << vertices[i] << " ";
+                    std::cout << std::endl;
+                }
+            }
+        }
+        else if(command == "list"){
+            if(matrix)
+                m.list_();
+            else if(list)
+                l.list_();
+        }
+    }while(command != "exit");
+
+    return 0;
+}
