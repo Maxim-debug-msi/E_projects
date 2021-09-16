@@ -28,14 +28,17 @@ class ListGraph : public IGraph{
 public:
     ~ListGraph() override = default;
 
-    explicit ListGraph(int& size) : v(size){
-        for(int i{1}; i <= v; ++i){
+    ListGraph() = default;
+
+    void init(int& size){
+        v = size;
+        for(int i{1}; i <= size; ++i){
             list_to[i];
             list_from[i];
         }
-    };
+    }
 
-    ListGraph(const ListGraph& _oth) : list_to(_oth.list_to), list_from(_oth.list_from), v(_oth.v){};
+    ListGraph(const ListGraph& _oth) = default;
 
     ListGraph& operator= (const ListGraph& _oth){
         if(this == &_oth)
@@ -104,24 +107,24 @@ private:
 
 class MatrixGraph : public IGraph{
 public:
-    ~MatrixGraph() override{
+    ~MatrixGraph() override = default ;
+
+    MatrixGraph() = default;
+
+    void init(std::vector<int>& indexes, int& size){
+        index2Vertex = indexes;
+        v = size;
         for(int i{}; i < v; ++i)
-            delete[] matrix[i];
-        delete[] matrix;
-    }
+            vertex2Index[index2Vertex[i]] = i;
 
-    explicit MatrixGraph(int& size) : matrix(new int* [size]), v(size){
-        for(int i{}; i < size; ++i)
-            matrix[i] = new int[size];
-
+        matrix.assign(v, std::vector<int>(v));
         for(int i{}; i < v; ++i){
-            for(int j{}; j < v; ++j){
+            for(int j{}; j < v; j++)
                 matrix[i][j] = 0;
-            }
         }
     }
 
-    MatrixGraph (const MatrixGraph& _oth) : matrix(_oth.matrix), v(_oth.v) {};
+    MatrixGraph (const MatrixGraph& _oth) = default;
 
     MatrixGraph& operator= (const MatrixGraph& _oth){
         if(this == &_oth)
@@ -134,9 +137,19 @@ public:
     }
 
     void AddEdge(int from, int to) override {
-        if(from <= v && to <= v)
-            matrix[from - 1][to - 1] = 1;
-        else std::cout << "Incorrect parameter!" << std::endl;
+        auto it1 = vertex2Index.find(from);
+        if(it1 == vertex2Index.end()){
+            std::cout << "Incorrect parameter!" << std::endl;
+            return;
+        }
+
+        auto it2 = vertex2Index.find(to);
+        if(it2 == vertex2Index.end()){
+            std::cout << "Incorrect parameter!" << std::endl;
+            return;
+        }
+
+        matrix[it1->second][it2->second] = 1;
     }
 
     int VerticesCount() const override{
@@ -145,26 +158,39 @@ public:
 
     std::vector<int> Vertices() const override{
         std::vector<int> vertices{};
+        auto it = vertex2Index.begin();
+
         for(int i{}; i < v; ++i)
-            vertices.push_back(i + 1);
+            vertices.push_back((it++)->first);
+
         return vertices;
     }
 
     std::vector<int> GetNextVertices(int vertex) const override{
         std::vector<int> vertices{};
+        auto it = vertex2Index.find(vertex);
+        int _vertex{it->second};
+
         for(int i{}; i < v; ++i){
-            if(matrix[vertex - 1][i] == 1)
-                vertices.push_back(i + 1);
+            if(matrix[_vertex][i] == 1)
+                vertices.push_back(index2Vertex[i]);
         }
+
         return vertices;
     }
 
     std::vector<int> GetPrevVertices(int vertex) const override{
         std::vector<int> vertices{};
+        auto it = vertex2Index.find(vertex);
+        int _vertex{it->second};
+
         for(int i{}; i < v; ++i){
-            if(i == vertex - 1) ++i;
-            if(matrix[i][vertex - 1] == 1)
-                vertices.push_back(i + 1);
+            if(i == _vertex) {
+                ++i;
+                continue;
+            }
+            if(matrix[i][_vertex] == 1)
+                vertices.push_back(index2Vertex[i]);
         }
         return vertices;
     }
@@ -178,11 +204,15 @@ public:
         }
     }
 private:
-    int** matrix;
+    std::vector<int> index2Vertex{};
+    std::map<int, int> vertex2Index{};
+    std::vector<std::vector<int>> matrix{};
     int v{};
 };
 
 int main() {
+    ListGraph l;
+    MatrixGraph m;
     std::string command{};
     bool matrix{false}, list{false};
 
@@ -196,8 +226,21 @@ int main() {
     int ver{};
     std::cin >> ver;
 
-    MatrixGraph m(ver);
-    ListGraph l(ver);
+    std::vector<int> indexes{};
+
+    if(matrix){
+        int ind{};
+        for(int i{}; i < ver; ++i){
+            std::cout << "Enter number of vertex " << i + 1 << ":" << std::endl;
+            std::cin >> ind;
+            indexes.push_back(ind);
+        }
+    }
+
+   if(matrix)
+       m.init(indexes, ver);
+   else if(list)
+       l.init(ver);
 
     do {
         std::cout << "Enter command(AddEdge, VCount, V, GetNextV, GetPrevV, list, exit):" << std::endl;
