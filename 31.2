@@ -10,7 +10,7 @@ public:
 
     IGraph() = default; // нужно реализовать в наследниках тоже
 
-    IGraph(const IGraph& _oth) = default; // нужно реализовать в наследниках тоже
+    explicit IGraph(IGraph* _oth){}; // нужно реализовать в наследниках тоже
 
     virtual void AddEdge(int from, int to) = 0; // Метод принимает вершины начала и конца ребра и добавляет ребро
 
@@ -21,6 +21,10 @@ public:
     virtual std::vector<int> GetNextVertices(int vertex) const = 0; // Для конкретной вершины метод возвращает вектор с вершинами, в которые можно дойти по ребру из данной
 
     virtual std::vector<int> GetPrevVertices(int vertex) const = 0; // Для конкретной вершины метод возвращает вектор с вершинами, из которых можно дойти по ребру в данную
+
+    virtual void get_param_m(std::map<int, std::vector<int>>& list_to, std::map<int, std::vector<int>>& list_from, int& v) const{};
+
+    virtual void get_param_l(std::vector<int>& index2Vertex, std::map<int, int>& vertex2Index, std::vector<std::vector<int>>& matrix, int& v) const{};
 
 };
 
@@ -49,6 +53,10 @@ public:
         v = _oth.v;
 
         return *this;
+    }
+
+    explicit ListGraph(IGraph* _oth) {
+        _oth->get_param_m(list_to, list_from, v);
     }
 
     void AddEdge(int from, int to) override{
@@ -92,13 +100,49 @@ public:
 
     void list_(){
         for(auto it{list_to.begin()}; it != list_to.end(); ++it){
-            std::cout << it->first << " - ";
-            for(int j{}; j < it->second.size(); ++j){
-                std::cout << it->second[j] << " ";
+            if(!it->second.empty()) {
+                std::cout << it->first << " -> ";
+                for (int j{}; j < it->second.size(); ++j) {
+                    std::cout << it->second[j] << " ";
+                }
+                std::cout << std::endl;
             }
-            std::cout << std::endl;
+        }
+
+        for(auto it{list_from.begin()}; it != list_from.end(); ++it){
+            if(!it->second.empty()) {
+                std::cout << it->first << " <- ";
+                for (int j{}; j < it->second.size(); ++j) {
+                    if (!it->second.empty())
+                        std::cout << it->second[j] << " ";
+                }
+                std::cout << std::endl;
+            }
         }
     }
+
+    void get_param_l(std::vector<int>& index2Vertex, std::map<int, int>& vertex2Index, std::vector<std::vector<int>>& matrix, int& _v) const override{
+        _v = v;
+        index2Vertex.resize(_v);
+        matrix.assign(v, std::vector<int>(v));
+        int i{};
+
+        for(auto it{list_to.begin()}; it != list_to.end(); ++it) {
+            index2Vertex.push_back(it->first);
+            vertex2Index[it->first] = i++;
+        }
+
+        for(auto it{list_to.begin()}; it != list_to.end(); ++it){
+            auto it1 = vertex2Index.find(it->first);
+            if(!it->second.empty()) {
+                for (int j{}; j < it->second.size(); ++j) {
+                    auto it2 = vertex2Index.find(it->second[j]);
+                    matrix[it1->second][it2->second] = 1;
+                }
+            }
+        }
+    }
+
 private:
     std::map<int, std::vector<int>> list_to{};
     std::map<int, std::vector<int>> list_from{};
@@ -118,13 +162,19 @@ public:
             vertex2Index[index2Vertex[i]] = i;
 
         matrix.assign(v, std::vector<int>(v));
+        /*
         for(int i{}; i < v; ++i){
             for(int j{}; j < v; j++)
                 matrix[i][j] = 0;
         }
+         */
     }
 
     MatrixGraph (const MatrixGraph& _oth) = default;
+
+    explicit MatrixGraph (IGraph* _oth){
+        _oth->get_param_l(index2Vertex, vertex2Index, matrix, v);
+    }
 
     MatrixGraph& operator= (const MatrixGraph& _oth){
         if(this == &_oth)
@@ -185,14 +235,22 @@ public:
         int _vertex{it->second};
 
         for(int i{}; i < v; ++i){
-            if(i == _vertex) {
-                ++i;
-                continue;
-            }
-            if(matrix[i][_vertex] == 1)
+            if(matrix[i][_vertex] == 1 && i != _vertex)
                 vertices.push_back(index2Vertex[i]);
         }
         return vertices;
+    }
+
+    void get_param_m(std::map<int, std::vector<int>>& list_to, std::map<int, std::vector<int>>& list_from, int& _v) const override{
+        _v = v;
+        for(int i{}; i < _v; ++i){
+            for(int j{}; j < _v; ++j){
+                if(matrix[i][j] == 1){
+                    list_to[index2Vertex[i]].push_back(index2Vertex[j]);
+                    list_from[index2Vertex[j]].push_back(index2Vertex[i]);
+                }
+            }
+        }
     }
 
     void list_(){
@@ -203,6 +261,7 @@ public:
             std::cout << std::endl;
         }
     }
+
 private:
     std::vector<int> index2Vertex{};
     std::map<int, int> vertex2Index{};
@@ -243,7 +302,7 @@ int main() {
        l.init(ver);
 
     do {
-        std::cout << "Enter command(AddEdge, VCount, V, GetNextV, GetPrevV, list, exit):" << std::endl;
+        std::cout << "Enter command(AddEdge, VCount, V, GetNextV, GetPrevV, list, swap, exit):" << std::endl;
         std::cin >> command;
 
         if(command == "AddEdge"){
@@ -343,6 +402,22 @@ int main() {
                 m.list_();
             else if(list)
                 l.list_();
+        }
+        else if(command == "swap"){
+            if(matrix){
+                ListGraph l1(&m);
+                l = l1;
+                l.list_();
+                matrix = false;
+                list = true;
+            }
+            else if(list){
+                MatrixGraph m1(&l);
+                m = m1;
+                m.list_();
+                list = false;
+                matrix = true;
+            }
         }
     }while(command != "exit");
 
