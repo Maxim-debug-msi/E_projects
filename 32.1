@@ -1,21 +1,11 @@
 #include <iostream>
-#include <string>
 #include <fstream>
 #include "nlohmann/json.hpp"
 
-struct Record{
-    std::string first_name{};
-    std::string second_name{};
-    int age{};
-    bool married{};
-};
-
 int main() {
-    Record record;
-
-    //std::cin >> record.first_name >> record.second_name >> record.age >> record.married;
     std::ofstream file("record.json");
     nlohmann::json dict{};
+    dict["Movie"] = "South Park";
     dict["Country"] = "USA";
     dict["Date of creation"] = 1997;
     dict["Studio"] = "Comedy Central";
@@ -29,7 +19,8 @@ int main() {
 }
 
 //file
-{"Actors":"Trey Parker, Matt Stone, Mona Marshall, April Stewart",
+{"Movie":"South Park",
+"Actors":"Trey Parker, Matt Stone, Mona Marshall, April Stewart",
   "Country":"USA",
   "Date of creation":1997,
   "Director":"Matt Stone, Tray Parker, Eric Stoch",
