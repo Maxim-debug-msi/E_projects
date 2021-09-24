@@ -1,0 +1,38 @@
+#include <iostream>
+#include <string>
+#include <fstream>
+#include "nlohmann/json.hpp"
+
+struct Record{
+    std::string first_name{};
+    std::string second_name{};
+    int age{};
+    bool married{};
+};
+
+int main() {
+    Record record;
+
+    //std::cin >> record.first_name >> record.second_name >> record.age >> record.married;
+    std::ofstream file("record.json");
+    nlohmann::json dict{};
+    dict["Country"] = "USA";
+    dict["Date of creation"] = 1997;
+    dict["Studio"] = "Comedy Central";
+    dict["Written by"] = "Matt Stone, Tray Parker";
+    dict["Director"] = "Matt Stone, Tray Parker, Eric Stoch";
+    dict["Main characters"] = "Eric Cartman, Kyle Broflovski, Kenny McCormick and Stan Marsh";
+    dict["Actors"] = "Trey Parker, Matt Stone, Mona Marshall, April Stewart";
+    file << dict;
+    file.close();
+    return 0;
+}
+
+//file
+{"Actors":"Trey Parker, Matt Stone, Mona Marshall, April Stewart",
+  "Country":"USA",
+  "Date of creation":1997,
+  "Director":"Matt Stone, Tray Parker, Eric Stoch",
+  "Main characters":"Eric Cartman, Kyle Broflovski, Kenny McCormick and Stan Marsh",
+  "Studio":"Comedy Central",
+  "Written by":"Matt Stone, Tray Parker"}
