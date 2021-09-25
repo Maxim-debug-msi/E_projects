@@ -1,0 +1,85 @@
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include "nlohmann/json.hpp"
+
+int main() {
+#if 0
+    std::ofstream write("record.json");
+
+    nlohmann::json sp{};
+    sp["Country"] = "USA";
+    sp["Date of creation"] = 1997;
+    sp["Studio"] = "Comedy_Central";
+    sp["Written by"] = "Matt_Stone";
+    sp["Producer"] = "Tray_Parker";
+    sp["Director"] = "Eric_Stoch";
+    sp["Main characters"] = std::vector<std::string>{"Eric Cartman", "Kyle Broflovski", "Kenny McCormick", "Stan Marsh"};
+    sp["Actors"] = std::vector<std::string>{"Trey_Parker", "Matt_Stone", "Mona_Marshall", "April_Stewart"};
+
+    nlohmann::json lotr{};
+    lotr["Country"] = "New_Zealand";
+    lotr["Date of creation"] = 2001;
+    lotr["Studio"] = "New_Line_Cinema";
+    lotr["Written by"] = "Peter_Jackson";
+    lotr["Producer"] = "Barry_M._Osborne";
+    lotr["Director"] = "Peter_Jackson";
+    lotr["Main characters"] = std::vector<std::string>{"Frodo", "Gandalf", "Samwise", "Aragorn"};
+    lotr["Actors"] = std::vector<std::string>{"Elijah_Wood", "Ian_McKellen", "Sean_Astin", "Viggo_Mortensen"};
+
+    nlohmann::json mov{};
+    mov["South Park"] = sp;
+    mov["Lord of the Rings"] = lotr;
+    write << mov;
+    write.close();
+#endif
+
+    std::ifstream read("record.json");
+    nlohmann::json record{};
+    read >> record;
+    read.close();
+
+    std::string param{};
+    std::vector<std::string> movies{};
+    std::vector<std::string> characters{};
+
+    nlohmann::json::iterator it = record.begin();
+
+    do {
+        std::cout << "Enter name of family of actor(enter 'end' to exit):" << std::endl;
+        std::cin >> param;
+
+        if(param == "end") break;
+
+        while(it != record.end()) {
+            it->find(param);
+            nlohmann::json::iterator it2 = record[it.key()].begin();
+
+            ptrdiff_t pos{-1};
+            for(int i{}; i < it2->get<std::vector<std::string>>().size(); ++i){
+                if(it2->get<std::vector<std::string>>()[i] == param)
+                    pos = i;
+            }
+            
+            if(pos != -1) {
+                movies.push_back(it.key());
+                characters.push_back(
+                        record[movies[movies.size() - 1]]["Main characters"].get<std::vector<std::string>>()[pos]);
+            }
+
+            ++it;
+        }
+
+        std::cout << "Movies:" << std::endl;
+        for(int i{}; i < movies.size(); ++i){
+            std::cout << movies[i] << " ";
+        }
+        std::cout << std::endl << "Characters:" << std::endl;
+        for(int i{}; i < characters.size(); ++i){
+            std::cout << characters[i] << " ";
+        }
+        std::cout << std::endl;
+    }while(param != "end");
+
+    return 0;
+}
