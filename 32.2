@@ -1,35 +1,69 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <string>
 #include "nlohmann/json.hpp"
 
 int main() {
-#if 0
+#if 0 //create & write json file(optional)
     std::ofstream write("record.json");
 
     nlohmann::json sp{};
     sp["Country"] = "USA";
     sp["Date of creation"] = 1997;
-    sp["Studio"] = "Comedy_Central";
-    sp["Written by"] = "Matt_Stone";
-    sp["Producer"] = "Tray_Parker";
-    sp["Director"] = "Eric_Stoch";
+    sp["Studio"] = "Comedy Central";
+    sp["Written by"] = "Matt Stone";
+    sp["Producer"] = "Tray Parker";
+    sp["Director"] = "Eric Stoch";
     sp["Main characters"] = std::vector<std::string>{"Eric Cartman", "Kyle Broflovski", "Kenny McCormick", "Stan Marsh"};
-    sp["Actors"] = std::vector<std::string>{"Trey_Parker", "Matt_Stone", "Mona_Marshall", "April_Stewart"};
+    sp["Actors"] = std::vector<std::string>{"Trey Parker", "Matt Stone", "Mona Marshall", "April Stewart"};
 
     nlohmann::json lotr{};
-    lotr["Country"] = "New_Zealand";
+    lotr["Country"] = "New Zealand";
     lotr["Date of creation"] = 2001;
-    lotr["Studio"] = "New_Line_Cinema";
-    lotr["Written by"] = "Peter_Jackson";
-    lotr["Producer"] = "Barry_M._Osborne";
-    lotr["Director"] = "Peter_Jackson";
-    lotr["Main characters"] = std::vector<std::string>{"Frodo", "Gandalf", "Samwise", "Aragorn"};
-    lotr["Actors"] = std::vector<std::string>{"Elijah_Wood", "Ian_McKellen", "Sean_Astin", "Viggo_Mortensen"};
+    lotr["Studio"] = "New Line Cinema";
+    lotr["Written by"] = "Peter Jackson";
+    lotr["Producer"] = "Barry M. Osborne";
+    lotr["Director"] = "Peter Jackson";
+    lotr["Main characters"] = std::vector<std::string>{"Frodo", "Gandalf", "Samwise", "Marry"};
+    lotr["Actors"] = std::vector<std::string>{"Elijah Wood", "Ian McKellen", "Sean Astin", "Dominic Monaghan"};
+
+    nlohmann::json lotr2{};
+    lotr2["Country"] = "New Zealand";
+    lotr2["Date of creation"] = 2002;
+    lotr2["Studio"] = "New Line Cinema";
+    lotr2["Written by"] = "Fren Walsh";
+    lotr2["Producer"] = "Barry M. Osborne";
+    lotr2["Director"] = "Peter Jackson";
+    lotr2["Main characters"] = std::vector<std::string>{"Saruman", "Gandalf", "Theoden", "Aragorn"};
+    lotr2["Actors"] = std::vector<std::string>{"Christopher Lee", "Ian McKellen", "Bernard Hill", "Viggo Mortensen"};
+
+    nlohmann::json lotr3{};
+    lotr3["Country"] = "New Zealand";
+    lotr3["Date of creation"] = 2003;
+    lotr3["Studio"] = "New Line Cinema";
+    lotr3["Written by"] = "Philip Boyens";
+    lotr3["Producer"] = "Eric Monette";
+    lotr3["Director"] = "Peter Jackson";
+    lotr3["Main characters"] = std::vector<std::string>{"Frodo", "Gandalf", "Legolas", "Aragorn"};
+    lotr3["Actors"] = std::vector<std::string>{"Elijah Wood", "Ian McKellen", "Orlando Bloom", "Viggo Mortensen"};
+
+    nlohmann::json hobbit{};
+    hobbit["Country"] = "New Zealand";
+    hobbit["Date of creation"] = 2003;
+    hobbit["Studio"] = "New Line Cinema";
+    hobbit["Written by"] = "Fran Walsh";
+    hobbit["Producer"] = "Carolynne Cunningham";
+    hobbit["Director"] = "Peter Jackson";
+    hobbit["Main characters"] = std::vector<std::string>{"Bilbo", "Gandalf", "Thorin", "Gollum"};
+    hobbit["Actors"] = std::vector<std::string>{"Martin Freeman", "Ian McKellen", "Richard Armitage", "Andy Serkis"};
 
     nlohmann::json mov{};
     mov["South Park"] = sp;
-    mov["Lord of the Rings"] = lotr;
+    mov["The Lord of the Rings: The Fellowship of the Ring"] = lotr;
+    mov["The Lord of the Rings: The Two Towers"] = lotr2;
+    mov["The Lord of the Rings: The Return of the King"] = lotr3;
+    mov["The Hobbit: An Unexpected Journey"] = hobbit;
     write << mov;
     write.close();
 #endif
@@ -43,24 +77,28 @@ int main() {
     std::vector<std::string> movies{};
     std::vector<std::string> characters{};
 
-    nlohmann::json::iterator it = record.begin();
-
     do {
+        nlohmann::json::iterator it = record.begin();
+
         std::cout << "Enter name of family of actor(enter 'end' to exit):" << std::endl;
         std::cin >> param;
 
         if(param == "end") break;
 
         while(it != record.end()) {
-            it->find(param);
             nlohmann::json::iterator it2 = record[it.key()].begin();
-
             ptrdiff_t pos{-1};
+
             for(int i{}; i < it2->get<std::vector<std::string>>().size(); ++i){
-                if(it2->get<std::vector<std::string>>()[i] == param)
+                unsigned int space_pos = it2->get<std::vector<std::string>>()[i].find(' ');
+
+                if(it2->get<std::vector<std::string>>()[i].substr(0, space_pos) == param ||
+                        it2->get<std::vector<std::string>>()[i].substr(space_pos,it2->get<std::vector<std::string>>()[i].length()) == param){
                     pos = i;
+                    break;
+                }
             }
-            
+
             if(pos != -1) {
                 movies.push_back(it.key());
                 characters.push_back(
@@ -72,13 +110,11 @@ int main() {
 
         std::cout << "Movies:" << std::endl;
         for(int i{}; i < movies.size(); ++i){
-            std::cout << movies[i] << " ";
+            std::cout << movies[i] << "- " << characters[i] << std::endl;
         }
-        std::cout << std::endl << "Characters:" << std::endl;
-        for(int i{}; i < characters.size(); ++i){
-            std::cout << characters[i] << " ";
-        }
-        std::cout << std::endl;
+
+        movies.resize(0);
+        characters.resize(0);
     }while(param != "end");
 
     return 0;
