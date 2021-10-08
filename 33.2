@@ -1,0 +1,69 @@
+#include <iostream>
+#include <exception>
+#include <ctime>
+
+class is_fish_except : public std::exception{
+    const char * what() const noexcept override{
+       return "You've caught a fish!";
+    }
+};
+
+class is_boot_except : public std::exception{
+    const char * what() const noexcept override{
+        return "You caught the boot :(";
+    }
+};
+
+void fishing(const int lake[]) {
+    do {
+        std::cout << "Enter the coordinate(1 to 9):" << std::endl;
+        int ind{};
+        std::cin >> ind;
+
+        if(ind < 0 || ind > 9){
+            std::cout << "Incorrect coordinate. Try again." << std::endl;
+            continue;
+        }
+
+        if(lake[ind - 1] == 1){
+            throw is_fish_except();
+        }
+        else if(lake[ind - 1] == 2){
+            throw is_boot_except();
+        }
+        else{
+            std::cout << "Empty. Try again." << std::endl;
+        }
+    }while(true);
+}
+
+int main() {
+    std::srand(time(nullptr));
+    int lake[9]{0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+    lake[rand() % 10] = 1;
+
+    int count{};
+    while(count < 3){
+        int ind{rand() % 9};
+
+        if(lake[ind] == 0){
+            lake[ind] = 2;
+            ++count;
+        }
+    }
+
+    try {
+        fishing(lake);
+    }
+    catch(std::exception& x){
+        std::cout << x.what() << std::endl;
+    }
+
+    for(int i{}; i < 9; ++i){
+        std::cout << lake[i] << " ";
+    }
+    std::cout << std::endl;
+
+    return 0;
+}
