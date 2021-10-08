@@ -1,0 +1,132 @@
+#include <iostream>
+#include <map>
+#include <exception>
+
+class no_barcode_except : public std::exception{
+    const char * what() const noexcept override{
+        return "Product code not found!";
+    }
+};
+
+class no_quantity_except : public std::exception{
+    const char * what() const noexcept override{
+        return "Invalid quantity of goods!";
+    }
+};
+
+void add(std::string& str, int& count, std::map<std::string, int>& warehouse, std::map<std::string, int>& basket){
+    std::map<std::string, int>::iterator it = warehouse.find(str);
+    if(it == warehouse.end()){
+        throw no_barcode_except();
+    }
+    else if(warehouse[str] < count){
+        throw no_quantity_except();
+    }
+    else{
+        warehouse[str] -= count;
+        basket[str] += count;
+    }
+}
+
+void remove(std::string& str, int& count, std::map<std::string, int>& warehouse, std::map<std::string, int>& basket){
+    std::map<std::string, int>::iterator it = basket.find(str);
+    if(it == basket.end()){
+        throw no_barcode_except();
+    }
+    else if(basket[str] < count){
+        throw no_quantity_except();
+    }
+    else{
+        basket[str] -= count;
+        warehouse[str] += count;
+    }
+
+    if(basket[str] == 0){
+        basket.erase(str);
+    }
+}
+
+int main() {
+    std::map<std::string, int> warehouse{};
+    std::map<std::string, int> basket{};
+    std::string input{};
+
+
+    std::cout << "Fill the warehouse with goods. Product code, then quantity. "
+                 "Enter 'list' to display the list, 'exit' to exit." << std::endl;
+    while(std::cout << "Enter product code:" << std::endl, std::cin >> input, input != "exit"){
+        if(input == "list"){
+            for(std::map<std::string, int>::iterator it = warehouse.begin(); it != warehouse.end(); ++it){
+                std::cout << it->first << " - " << it->second << std::endl;
+            }
+            continue;
+        }
+
+        do {
+            std::cout << "Enter product quantity:" << std::endl;
+            std::cin >> warehouse[input];
+
+            if (warehouse[input] <= 0) {
+                std::cout << "Invalid product quantity, please try again." << std::endl;
+            }
+        }while(warehouse[input] <= 0);
+    }
+
+    std::cout << "Enter 'add' to add an item to the cart, 'remove' to remove. "
+                 "Enter 'exit' to exit, 'list' to list." << std::endl;
+    while(std::cout << "Enter command:" << std::endl, std::cin >> input, input != "exit"){
+        bool correct{false};
+        if(input == "add"){
+            do{
+                std::cout << "Enter product code:" << std::endl;
+                std::cin >> input;
+
+                int count{};
+                std::cout << "Enter product quantity:" << std::endl;
+                std::cin >> count;
+
+                try{
+                    add(input, count, warehouse, basket);
+                    correct = true;
+                }
+                catch(std::exception& x){
+                    std::cout << x.what() << std::endl;
+                }
+            }while(!correct);
+        }
+        else if(input == "remove"){
+            do{
+                std::cout << "Enter product code:" << std::endl;
+                std::cin >> input;
+
+                int count{};
+                std::cout << "Enter product quantity:" << std::endl;
+                std::cin >> count;
+
+                try{
+                    remove(input, count, warehouse, basket);
+                    correct = true;
+                }
+                catch(std::exception& x){
+                    std::cout << x.what() << std::endl;
+                }
+            }while(!correct);
+        }
+        else if(input == "list"){
+            std::cout << "Warehouse:" << std::endl;
+            for(std::map<std::string, int>::iterator it = warehouse.begin(); it != warehouse.end(); ++it){
+                std::cout << it->first << " - " << it->second << std::endl;
+            }
+
+            std::cout << "Basket:" << std::endl;
+            for(std::map<std::string, int>::iterator it = basket.begin(); it != basket.end(); ++it){
+                std::cout << it->first << " - " << it->second << std::endl;
+            }
+        }
+        else{
+            std::cout << "Unknown command! Try again." << std::endl;
+        }
+    }
+
+    return 0;
+}
