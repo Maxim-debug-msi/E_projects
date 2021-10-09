@@ -1,0 +1,54 @@
+#include <iostream>
+#include <string>
+
+template<typename T>
+T average(T arr[], int& size){
+    T sum{};
+    for(int i{}; i < size; ++i){
+        sum += arr[i];
+    }
+    return (T)(sum / size);
+}
+
+template<typename T>
+void fill_array(T arr[], int& size){
+    std::cout << "Fill the array:" << std::endl;
+
+    for(int i{}; i < size; ++i){
+        std::cout << "Value " << i + 1 << ": " << std::endl;
+        std::cin >> arr[i];
+    }
+}
+
+int main() {
+    std::cout << "Choose data type(int, float, double):" << std::endl;
+    std::string data_type{};
+    std::cin >> data_type;
+
+    std::cout << "Enter size of array:" << std::endl;
+    std::string size{};
+    std::cin >> size;
+
+    int s{std::stoi(size)};
+
+
+    if(data_type == "int"){
+        int arr[s];
+        fill_array<int>(arr, s);
+        std::cout << "Average: " << average<int>(arr, s) << std::endl;
+    }
+    else if(data_type == "float"){
+        float arr[s];
+        fill_array<float>(arr, s);
+        std::cout << "Average: " << average<float>(arr, s) << std::endl;
+    }
+    else if(data_type == "double"){
+        double arr[s];
+        fill_array<double>(arr, s);
+        std::cout << "Average: " << average<double>(arr, s) << std::endl;
+    }
+    else{
+        std::cout << "Unknown type." << std::endl;
+    }
+    return 0;
+}
