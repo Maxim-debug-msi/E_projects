@@ -1,0 +1,162 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+template<class T1, class T2>
+class Registry{
+public:
+    void add(T1 x, T2 y){
+        keys.push_back(x);
+        meaning.push_back(y);
+    }
+
+    void remove(T1 key){
+        typename std::vector<T1>::iterator it = std::find(keys.begin(), keys.end(), key);
+        if(it == keys.end()){
+            std::cout << "Incorrect key. Try again." << std::endl;
+            return;
+        }
+        else{
+            keys.erase(it);
+
+            ptrdiff_t dif{keys.begin() - it};
+            typename std::vector<T2>::iterator it2 = std::find(meaning.begin(), meaning.end(), meaning[dif]);
+            
+            meaning.erase(it2);
+        }
+    }
+
+    void print() const{
+        typename std::vector<T1>::size_type size{keys.size()};
+        for(typename std::vector<T1>::size_type i{}; i < size; ++i){
+            std::cout << keys[i] << " - " << meaning[i] << std::endl;
+        }
+    }
+
+    T2 find(T1 key){
+        typename std::vector<T1>::iterator it = std::find(keys.begin(), keys.end(), key);
+        ptrdiff_t idx{(it - keys.begin())};
+
+        return meaning[idx];
+    }
+
+private:
+    std::vector<T1> keys{};
+    std::vector<T2> meaning{};
+};
+
+void get_type(std::string& str){
+    std::string::size_type len{str.length()};
+
+    int dot_count{};
+    bool is_int{false};
+    bool is_double{false};
+    for(std::string::size_type i{}; i < len; ++i){
+
+    }
+}
+
+template<typename KEY, typename MEANING>
+void interface(Registry<KEY, MEANING>& reg){
+    KEY key{};
+    MEANING meaning{};
+    std::string command{};
+
+    do{
+        std::cout << "Enter command(add, remove, print, find or exit):" << std::endl;
+        std::cin >> command;
+
+        if(command == "add"){
+            std::cout << "Enter the key:" << std::endl;
+            std::cin >> key;
+
+            std::cout << "Enter the meaning:" << std::endl;
+            std::cin >> meaning;
+
+            reg.add(key, meaning);
+        }
+        else if(command == "remove"){
+            std::cout << "Enter the key:" << std::endl;
+            std::cin >> key;
+
+            reg.remove(key);
+        }
+        else if(command == "print"){
+            reg.print();
+        }
+        else if(command == "find"){
+            std::cout << "Enter the key:" << std::endl;
+            std::cin >> key;
+
+            std::cout << reg.find(key) << std::endl;
+        }
+
+    }while(command != "exit");
+}
+
+int main() {
+    std::string key_type{};
+    std::string meaning_type{};
+
+    do {
+        std::cout << "Enter type of key and meaning(string, int or double)." << std::endl;
+        std::cout << "Type of key:" << std::endl;
+        std::cin >> key_type;
+
+        std::cout << "Type of meaning:" << std::endl;
+        std::cin >> meaning_type;
+
+        if (key_type == "string" && meaning_type == "string") {
+            Registry<std::string, std::string> reg;
+            interface<std::string, std::string>(reg);
+            break;
+        }
+        else if(key_type == "string" && meaning_type == "int"){
+            Registry<std::string, int> reg;
+            interface<std::string, int>(reg);
+            break;
+        }
+        else if(key_type == "string" && meaning_type == "double"){
+            Registry<std::string, double> reg;
+            interface<std::string, double>(reg);
+            break;
+        }
+        else if(key_type == "int" && meaning_type == "string"){
+            Registry<int, std::string> reg;
+            interface<int, std::string>(reg);
+            break;
+        }
+        else if(key_type == "int" && meaning_type == "int"){
+            Registry<int, int> reg;
+            interface<int, int>(reg);
+            break;
+        }
+        else if(key_type == "int" && meaning_type == "double"){
+            Registry<int, double> reg;
+            interface<int, double>(reg);
+            break;
+        }
+        else if(key_type == "double" && meaning_type == "string"){
+            Registry<double, std::string> reg;
+            interface<double, std::string>(reg);
+            break;
+        }
+        else if(key_type == "double" && meaning_type == "int"){
+            Registry<double, int> reg;
+            interface<double, int>(reg);
+            break;
+        }
+        else if(key_type == "double" && meaning_type == "double"){
+            Registry<double, double> reg;
+            interface<double, double>(reg);
+            break;
+        }
+        else{
+            std::cout << "Unknown type. Try again." << std::endl;
+        }
+
+    }while(true);
+
+
+    return 0;
+}
