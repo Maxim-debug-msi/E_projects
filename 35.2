@@ -1,0 +1,29 @@
+#include <iostream>
+#include <vector>
+#include <memory>
+#include <unordered_set>
+
+int main() {
+    std::vector<int> v1{1, 2, 3, 3, 2, 4, 4, 4, 5, 5, 1};
+
+    auto ptr = [](std::vector<int>& v1){
+        std::unordered_set<int> set{};
+        std::vector<int> v2;
+
+        for(auto &i : v1){
+            if(!set.count(i)){
+                v2.push_back(i);
+                set.insert(i);
+            }
+        }
+
+        return std::make_unique<std::vector<int>>(v2);
+    };
+
+    std::unique_ptr<std::vector<int>> p = ptr(v1);
+
+    for(int i{}; i < p->size(); ++i){
+        std::cout << *(p->begin() + i) << " ";
+    }
+    return 0;
+}
