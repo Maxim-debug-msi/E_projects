@@ -4,13 +4,13 @@
 
 int main() {
     std::filesystem::path path{"C:\\Projects"};
-    const std::string ext{".git"};
+    const std::string ext{".uproject"};
 
     auto findFileNameByExt = [](std::filesystem::path& path, const std::string& ext){
         std::vector<std::string> fileNames{};
 
         for(auto& p : std::filesystem::recursive_directory_iterator(path)){
-            if(is_regular_file(p.path()) && p.path().extension().compare(ext)){
+            if(is_regular_file(p.path()) && p.path().extension() == ext){
                 fileNames.push_back(p.path().filename().string());
             }
         }
