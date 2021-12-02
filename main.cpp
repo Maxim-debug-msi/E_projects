@@ -66,19 +66,19 @@ int main(int argc, char **argv){
     QApplication app(argc, argv);
 
     ImageButton circle(nullptr);
-    auto *slider = new QSlider(Qt::Horizontal);
-    slider->setMinimum(0);
-    slider->setMaximum(100);
-    QWidget *window = new QWidget;
+    QSlider slider(Qt::Horizontal);
+    slider.setMinimum(0);
+    slider.setMaximum(100);
+    auto *window = new QWidget;
     auto *layout = new QVBoxLayout(window);
 
     layout->addWidget(&circle);
-    layout->addWidget(slider);
+    layout->addWidget(&slider);
 
     window->resize(100, 100);
     window->move(1000, 500);
 
-    QObject::connect(slider, &QSlider::valueChanged,[&circle](int value){
+    QObject::connect(&slider, &QSlider::valueChanged,[&circle](int value){
         if(value > 66){
             circle.setRed();
         }
