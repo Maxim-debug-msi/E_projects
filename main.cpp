@@ -4,7 +4,6 @@
 #include <QSlider>
 #include <QPaintEvent>
 #include <QVBoxLayout>
-#include <iostream>
 
 class ImageButton : public QWidget{
 public:
@@ -69,14 +68,14 @@ int main(int argc, char **argv){
     QSlider slider(Qt::Horizontal);
     slider.setMinimum(0);
     slider.setMaximum(100);
-    auto *window = new QWidget;
-    auto *layout = new QVBoxLayout(window);
+    QWidget window;
+    QVBoxLayout layout(&window);
 
-    layout->addWidget(&circle);
-    layout->addWidget(&slider);
+    layout.addWidget(&circle);
+    layout.addWidget(&slider);
 
-    window->resize(100, 100);
-    window->move(1000, 500);
+    window.resize(100, 100);
+    window.move(1000, 500);
 
     QObject::connect(&slider, &QSlider::valueChanged,[&circle](int value){
         if(value > 66){
@@ -89,6 +88,6 @@ int main(int argc, char **argv){
             circle.setGreen();
         }
     });
-    window->show();
+    window.show();
     QApplication::exec();
 }
