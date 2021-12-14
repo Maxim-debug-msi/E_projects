@@ -1,0 +1,166 @@
+/********************************************************************************
+** Form generated from reading UI file 'player_uicyHEoB.ui'
+**
+** Created by: Qt User Interface Compiler version 5.15.5
+**
+** WARNING! All changes made in this file will be lost when recompiling UI file!
+********************************************************************************/
+
+#ifndef PLAYER_UICYHEOB_H
+#define PLAYER_UICYHEOB_H
+
+#include <QtCore/QVariant>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QGridLayout>
+#include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QMainWindow>
+#include <QtWidgets/QMenuBar>
+#include <QtWidgets/QProgressBar>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QStatusBar>
+#include <QtWidgets/QVBoxLayout>
+#include <QtWidgets/QWidget>
+
+QT_BEGIN_NAMESPACE
+
+class Ui_MainWindow
+{
+public:
+    QWidget *centralwidget;
+    QGridLayout *gridLayout;
+    QVBoxLayout *verticalLayout;
+    QLineEdit *lineEdit;
+    QProgressBar *progressBar;
+    QHBoxLayout *horizontalLayout;
+    QPushButton *pushButton_3;
+    QPushButton *pushButton_5;
+    QPushButton *pushButton_4;
+    QPushButton *pushButton_2;
+    QPushButton *pushButton;
+    QMenuBar *menubar;
+    QStatusBar *statusbar;
+
+    void setupUi(QMainWindow *MainWindow)
+    {
+        if (MainWindow->objectName().isEmpty())
+            MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
+        MainWindow->resize(519, 184);
+        centralwidget = new QWidget(MainWindow);
+        centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
+        gridLayout = new QGridLayout(centralwidget);
+        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
+        verticalLayout = new QVBoxLayout();
+        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
+        lineEdit = new QLineEdit(centralwidget);
+        lineEdit->setObjectName(QString::fromUtf8("lineEdit"));
+        QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(24);
+        sizePolicy.setHeightForWidth(lineEdit->sizePolicy().hasHeightForWidth());
+        lineEdit->setSizePolicy(sizePolicy);
+        QFont font;
+        font.setBold(true);
+        font.setWeight(75);
+        lineEdit->setFont(font);
+        lineEdit->setLayoutDirection(Qt::RightToLeft);
+
+        verticalLayout->addWidget(lineEdit);
+
+        progressBar = new QProgressBar(centralwidget);
+        progressBar->setObjectName(QString::fromUtf8("progressBar"));
+        progressBar->setValue(0);
+
+        verticalLayout->addWidget(progressBar);
+
+        horizontalLayout = new QHBoxLayout();
+        horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
+        pushButton_3 = new QPushButton(centralwidget);
+        pushButton_3->setObjectName(QString::fromUtf8("pushButton_3"));
+        QSizePolicy sizePolicy1(QSizePolicy::Minimum, QSizePolicy::Expanding);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(pushButton_3->sizePolicy().hasHeightForWidth());
+        pushButton_3->setSizePolicy(sizePolicy1);
+        QFont font1;
+        font1.setPointSize(16);
+        pushButton_3->setFont(font1);
+
+        horizontalLayout->addWidget(pushButton_3);
+
+        pushButton_5 = new QPushButton(centralwidget);
+        pushButton_5->setObjectName(QString::fromUtf8("pushButton_5"));
+        sizePolicy1.setHeightForWidth(pushButton_5->sizePolicy().hasHeightForWidth());
+        pushButton_5->setSizePolicy(sizePolicy1);
+        pushButton_5->setFont(font1);
+
+        horizontalLayout->addWidget(pushButton_5);
+
+        pushButton_4 = new QPushButton(centralwidget);
+        pushButton_4->setObjectName(QString::fromUtf8("pushButton_4"));
+        sizePolicy1.setHeightForWidth(pushButton_4->sizePolicy().hasHeightForWidth());
+        pushButton_4->setSizePolicy(sizePolicy1);
+        pushButton_4->setFont(font1);
+
+        horizontalLayout->addWidget(pushButton_4);
+
+        pushButton_2 = new QPushButton(centralwidget);
+        pushButton_2->setObjectName(QString::fromUtf8("pushButton_2"));
+        sizePolicy1.setHeightForWidth(pushButton_2->sizePolicy().hasHeightForWidth());
+        pushButton_2->setSizePolicy(sizePolicy1);
+        pushButton_2->setFont(font1);
+
+        horizontalLayout->addWidget(pushButton_2);
+
+        pushButton = new QPushButton(centralwidget);
+        pushButton->setObjectName(QString::fromUtf8("pushButton"));
+        sizePolicy1.setHeightForWidth(pushButton->sizePolicy().hasHeightForWidth());
+        pushButton->setSizePolicy(sizePolicy1);
+        pushButton->setFont(font1);
+
+        horizontalLayout->addWidget(pushButton);
+
+
+        verticalLayout->addLayout(horizontalLayout);
+
+
+        gridLayout->addLayout(verticalLayout, 0, 0, 1, 1);
+
+        MainWindow->setCentralWidget(centralwidget);
+        menubar = new QMenuBar(MainWindow);
+        menubar->setObjectName(QString::fromUtf8("menubar"));
+        menubar->setGeometry(QRect(0, 0, 519, 26));
+        MainWindow->setMenuBar(menubar);
+        statusbar = new QStatusBar(MainWindow);
+        statusbar->setObjectName(QString::fromUtf8("statusbar"));
+        MainWindow->setStatusBar(statusbar);
+
+        retranslateUi(MainWindow);
+        QObject::connect(pushButton_3, SIGNAL(clicked()), MainWindow, SLOT(play()));
+        QObject::connect(pushButton_5, SIGNAL(clicked()), MainWindow, SLOT(pause()));
+        QObject::connect(pushButton_4, SIGNAL(clicked()), MainWindow, SLOT(stop()));
+        QObject::connect(pushButton_2, SIGNAL(clicked()), MainWindow, SLOT(rewind()));
+        QObject::connect(pushButton, SIGNAL(clicked()), MainWindow, SLOT(forward()));
+
+        QMetaObject::connectSlotsByName(MainWindow);
+    } // setupUi
+
+    void retranslateUi(QMainWindow *MainWindow)
+    {
+        MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "Player", nullptr));
+        pushButton_3->setText(QCoreApplication::translate("MainWindow", "\342\226\266\357\270\217", nullptr));
+        pushButton_5->setText(QCoreApplication::translate("MainWindow", "\342\217\270\357\270\217", nullptr));
+        pushButton_4->setText(QCoreApplication::translate("MainWindow", "\342\217\271", nullptr));
+        pushButton_2->setText(QCoreApplication::translate("MainWindow", "\342\217\252\357\270\217", nullptr));
+        pushButton->setText(QCoreApplication::translate("MainWindow", "\342\217\251\357\270\217", nullptr));
+    } // retranslateUi
+
+};
+
+namespace Ui {
+    class MainWindow: public Ui_MainWindow {};
+} // namespace Ui
+
+QT_END_NAMESPACE
+
+#endif // PLAYER_UICYHEOB_H
