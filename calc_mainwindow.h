@@ -5,8 +5,6 @@
 #ifndef INC_37_1_CALC_MAINWINDOW_H
 #define INC_37_1_CALC_MAINWINDOW_H
 
-#include <iostream>
-#include <string>
 #include <QMainWindow>
 #include <QtWidgets/QLineEdit>
 
@@ -18,19 +16,15 @@ public:
     CalcMainWindow(QWidget* parent = nullptr): QMainWindow(parent){}
     void num_ext(){
         if(flags == 0){
-            std::cout << "1-" << number << std::endl;
             a_i = stoi(number);
         }
         else if(flags == 1){
-            std::cout << "2-" << number << std::endl;
             a_d = stod(number);
         }
         else if(flags > 1 && (flags % 2 == 1)){
-            std::cout << "3-" << number << std::endl;
             b_d = stod(number);
         }
         else{
-            std::cout << "4-" << number << std::endl;
             b_i = stoi(number);
         }
         if(flags % 2 == 1){
@@ -41,7 +35,6 @@ public:
 
     void calculate(){
         if(flags == 2){
-            std::cout << "add" << std::endl;
             if(is_double_expr){
                 number = std::to_string((long double)(a_d + a_i + b_d + b_i));
             }else{
@@ -49,7 +42,6 @@ public:
             }
         }
         else if(flags == 4){
-            std::cout << "sub" << std::endl;
             if(is_double_expr){
                 number = std::to_string((long double)(a_d - a_i - b_d - b_i));
             }else{
@@ -57,9 +49,8 @@ public:
             }
         }
         else if(flags == 8){
-            std::cout << "mult" << std::endl;
             if(a_d == a_i){
-                number = "Invalid argument!";
+                number = "Умножать 0 на число нельзя!";
                 is_over_expr = true;
                 return;
             }
@@ -90,9 +81,8 @@ public:
             }
         }
         else{
-            std::cout << "div" << std::endl;
             if(b_d == b_i){
-                number = "Invalid argument!";
+                number = "Делить на 0 нельзя!";
                 is_over_expr = true;
                 return;
             }
@@ -137,11 +127,7 @@ public:
             number.clear();
         }
     }
-
-    void debug(){
-        std::cout << a_i << " " << a_d << " " << b_i << " " << b_d <<  std::endl;
-        std::cout << flags << std::endl;
-    }
+    
 public slots:
     void add0() {refresh(); lineEdit->setText(lineEdit->text() + "0"); number += "0";};
     void add1() {refresh(); lineEdit->setText(lineEdit->text() + "1"); number += "1";};
@@ -165,10 +151,10 @@ private:
 
     long double a_d{};
     long double b_d{};
-
-    int flags{0};
+    
     bool is_double_expr{false};
     bool is_over_expr{false};
+    int flags{0};
     //1 bit - is double num, 2 bit - add, 3 bit - sub, 4 bit - mult, 5 bit - div
 
     std::string number;
