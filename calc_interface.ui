@@ -1,13 +1,13 @@
 /********************************************************************************
-** Form generated from reading UI file 'calc_interfaceVBQSFd.ui'
+** Form generated from reading UI file 'calc_interfaceRKVSjk.ui'
 **
 ** Created by: Qt User Interface Compiler version 5.15.5
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
 
-#ifndef CALC_INTERFACEVBQSFD_H
-#define CALC_INTERFACEVBQSFD_H
+#ifndef CALC_INTERFACERKVSJK_H
+#define CALC_INTERFACERKVSJK_H
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
@@ -253,7 +253,7 @@ public:
 
     void retranslateUi(QMainWindow *MainWindow)
     {
-        MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
+        MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "Calculator", nullptr));
         lineEdit->setText(QString());
         pushButton_10->setText(QCoreApplication::translate("MainWindow", ".", nullptr));
         pushButton_12->setText(QCoreApplication::translate("MainWindow", "+", nullptr));
@@ -281,4 +281,5 @@ namespace Ui {
 
 QT_END_NAMESPACE
 
-#endif // CALC_INTERFACEVBQSFD_H
+#endif // CALC_INTERFACERKVSJK_H
+
