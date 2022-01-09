@@ -1,20 +1,83 @@
 #include <QApplication>
 #include <QPushButton>
+#include <QPainter>
+#include <QPaintEvent>
 #include <QtMultimedia/QMediaPlayer>
+#include <QTimer>
+class RedButton : public QPushButton{
 
+public:
+    RedButton() = default;
+    explicit RedButton(QWidget *parent);
+    void paintEvent(QPaintEvent *event) override;
+    QSize sizeHint() const override;
+    QSize minimumSizeHint() const override;
+    void keyPressEvent(QKeyEvent *event) override;
+
+public slots:
+    void setUp();
+    void setDown();
+
+private:
+    QPixmap mCurrentButtonPixmap;
+    QPixmap mButtonDownPixmap;
+    QPixmap mButtonUpPixmap;
+};
+
+RedButton::RedButton(QWidget *parent) {
+    setParent(parent);
+    setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    mButtonUpPixmap = QPixmap(R"(C:\Users\Maxim\Desktop\Programming\E_files\button1.png)");
+    mButtonDownPixmap = QPixmap(R"("C:\Users\Maxim\Desktop\Programming\E_files\button2.png")");
+    mCurrentButtonPixmap = mButtonUpPixmap;
+    setGeometry(mCurrentButtonPixmap.rect());
+    connect(this, &QPushButton::clicked, this, &RedButton::setDown);
+}
+
+void RedButton::paintEvent(QPaintEvent *event){
+    QPainter p(this);
+    p.drawPixmap(event->rect(), mCurrentButtonPixmap);
+}
+
+QSize RedButton::sizeHint() const{
+    return {100, 100};
+}
+
+QSize RedButton::minimumSizeHint() const {
+    return sizeHint();
+}
+
+void RedButton::keyPressEvent(QKeyEvent *event) {
+    setDown();
+}
+
+void RedButton::setDown() {
+    mCurrentButtonPixmap = mButtonDownPixmap;
+    update();
+    QTimer::singleShot(100, this, &RedButton::setUp);
+}
+
+void RedButton::setUp() {
+    mCurrentButtonPixmap = mButtonUpPixmap;
+    update();
+}
 
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
     //
-    QPushButton button("Hello world!", nullptr);
-    button.resize(200, 100);
-    QMediaPlayer player;
-    QString filePath(R"(C:\Users\Maxim\Desktop\Programming\E_files\push_button.mp3)");
+    RedButton button(nullptr);
+    button.setFixedSize(200, 200);
+    button.move(1000, 400);
     //
-    QObject::connect(&button, &QPushButton::clicked, [&player, &filePath](){
+    QString filePath(R"(C:\Users\Maxim\Desktop\Programming\E_files\clicked.mp3)");
+    QMediaPlayer player;
+
+    QObject::connect(&button, &QPushButton::pressed, [&player, &filePath](){
         player.setMedia(QUrl::fromLocalFile(filePath));
         player.setVolume(75);
+        player.play();
     });
+
     button.show();
     return QApplication::exec();
 }
