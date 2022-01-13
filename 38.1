@@ -5,7 +5,7 @@
 #include <QtMultimedia/QMediaPlayer>
 #include <QTimer>
 class RedButton : public QPushButton{
-
+Q_OBJECT
 public:
     RedButton() = default;
     explicit RedButton(QWidget *parent);
@@ -77,7 +77,9 @@ int main(int argc, char *argv[]) {
         player.setVolume(75);
         player.play();
     });
-
+    
     button.show();
     return QApplication::exec();
 }
+
+#include "main.moc"
